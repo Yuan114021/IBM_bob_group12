@@ -68,27 +68,37 @@ if (matched.length === 0) {
 
       <!-- 配對志工清單 -->
       <div class="space-y-3 border-t border-gray-100 pt-4">
-        ${candidates.map(({ vol, commonServices, commonTimes }) => `
-          <div class="flex items-start gap-3 bg-green-50 rounded-xl p-4 border border-green-100">
-            <span class="text-xl">🙋</span>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center gap-2 flex-wrap">
-                <span class="font-semibold text-gray-700 text-sm">${vol.name}</span>
-                ${vol.verified
-                  ? '<span class="badge-volunteer">💜 愛心志工</span>'
-                  : '<span class="badge-pending">認證中</span>'}
-              </div>
-              <div class="mt-1 flex flex-wrap gap-1">
-                <span class="text-xs text-gray-400">共同服務：</span>
-                ${commonServices.map(s => `<span class="text-xs bg-green-100 text-green-700 rounded-full px-2 py-0.5">${s}</span>`).join('')}
-              </div>
-              <div class="mt-1 flex flex-wrap gap-1">
-                <span class="text-xs text-gray-400">共同時段：</span>
-                ${commonTimes.map(t => `<span class="text-xs bg-gray-100 text-gray-600 rounded-full px-2 py-0.5">${t}</span>`).join('')}
+        ${candidates.map(({ vol, commonServices, commonTimes }) => {
+          const matchRoomId = `MATCH_${elder.id}_${vol.id}`;
+          return `
+          <div class="bg-green-50 rounded-xl p-4 border border-green-100">
+            <div class="flex items-start gap-3">
+              <span class="text-xl">🙋</span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="font-semibold text-gray-700 text-sm">${vol.name}</span>
+                  ${vol.verified
+                    ? '<span class="badge-volunteer">💜 愛心志工</span>'
+                    : '<span class="badge-pending">認證中</span>'}
+                </div>
+                <div class="mt-1 flex flex-wrap gap-1">
+                  <span class="text-xs text-gray-400">共同服務：</span>
+                  ${commonServices.map(s => `<span class="text-xs bg-green-100 text-green-700 rounded-full px-2 py-0.5">${s}</span>`).join('')}
+                </div>
+                <div class="mt-1 flex flex-wrap gap-1">
+                  <span class="text-xs text-gray-400">共同時段：</span>
+                  ${commonTimes.map(t => `<span class="text-xs bg-gray-100 text-gray-600 rounded-full px-2 py-0.5">${t}</span>`).join('')}
+                </div>
               </div>
             </div>
-          </div>
-        `).join('')}
+            <div class="mt-3 flex justify-end">
+              <a href="chat.html?room=${encodeURIComponent(matchRoomId)}"
+                 class="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 bg-white hover:bg-blue-50 border border-blue-200 rounded-lg px-3 py-1.5 transition font-semibold">
+                💬 開啟匿名聊天室
+              </a>
+            </div>
+          </div>`;
+        }).join('')}
       </div>
     </div>
   `).join('');

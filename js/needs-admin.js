@@ -79,6 +79,13 @@ function renderCard(r, showActions) {
     </div>
   ` : '';
 
+  const chatBtn = r.status === 'approved' ? `
+    <a href="chat.html?room=${encodeURIComponent(r.id)}"
+       class="mt-2 inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-100 rounded-lg px-3 py-1.5 transition font-semibold">
+      💬 開啟匿名聊天室
+    </a>
+  ` : '';
+
   return `
     <div class="bg-white rounded-xl border border-gray-200 p-4">
       <div class="flex items-start justify-between gap-3 flex-wrap">
@@ -92,6 +99,7 @@ function renderCard(r, showActions) {
       ${r.desc ? `<p class="text-sm text-gray-500 mt-2">${r.desc}</p>` : ''}
       <p class="text-xs text-gray-300 mt-1">${formatDate(r.createdAt)}</p>
       ${actions}
+      ${chatBtn}
     </div>
   `;
 }
