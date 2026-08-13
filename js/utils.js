@@ -33,3 +33,11 @@ function formatDate(isoString) {
   const d = new Date(isoString);
   return `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
 }
+
+/** 套用全域字體大小（從 localStorage 讀取，預設 16px） */
+function applyGlobalFontSize() {
+  const size = localStorage.getItem('global_font_size');
+  if (size) {
+    document.documentElement.style.fontSize = size + 'px';
+  }
+}
