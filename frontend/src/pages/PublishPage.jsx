@@ -10,8 +10,7 @@ export default function PublishPage() {
   const navigate = useNavigate()
   const [form, setForm] = useState({
     title: '', category: '食品', description: '',
-    condition: '良好', pickup_method: '面交', expiry_date: '',
-    location_display: '',
+    condition: '良好', pickup_method: '面交', expiry_date: '', location_display: '',
   })
   const [photo, setPhoto] = useState(null)
   const [showWarning, setShowWarning] = useState(false)
@@ -34,12 +33,8 @@ export default function PublishPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (form.category === '食品' && !form.expiry_date) {
-      setError('食品類別必須填寫有效期限')
-      return
-    }
-    setLoading(true)
-    setError('')
+    if (form.category === '食品' && !form.expiry_date) { setError('食品類別必須填寫有效期限'); return }
+    setLoading(true); setError('')
     try {
       const pos = await getLocation()
       const data = new FormData()
@@ -48,129 +43,106 @@ export default function PublishPage() {
       data.append('location_lng', pos.lng)
       if (!form.location_display) data.set('location_display', '附近區域')
       if (photo) data.append('photo', photo)
-
-      const res = await api.post('/resources/', data, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      })
-
-      if (res.data.matched_demands?.length > 0) {
-        setMatchedDemands(res.data.matched_demands)
-      } else {
-        navigate('/map')
-      }
+      const res = await api.post('/resources/', data, { headers: { 'Content-Type': 'multipart/form-data' } })
+      if (res.data.matched_demands?.length > 0) setMatchedDemands(res.data.matched_demands)
+      else navigate('/resources')
     } catch (err) {
       setError(err.response?.data?.detail || '發布失敗，請稍後再試')
-    } finally {
-      setLoading(false)
-    }
+    } finally { setLoading(false) }
   }
 
-  if (matchedDemands.length > 0) {
-    return (
-      <div className="max-w-lg mx-auto px-4 py-10 text-center">
-        <div className="text-5xl mb-4">🎉</div>
-        <h2 className="text-xl font-bold text-green-700 mb-2">物資發布成功！</h2>
-        <p className="text-gray-600 mb-4">附近有 <strong>{matchedDemands.length}</strong> 筆相符的需求：</p>
-        <ul className="text-left bg-blue-50 rounded-xl p-4 mb-6">
-          {matchedDemands.map(d => (
-            <li key={d.id} className="text-sm text-blue-800 py-1 border-b border-blue-100 last:border-0">🙋 {d.title}</li>
-          ))}
-        </ul>
-        <button onClick={() => navigate('/map')} className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
-          前往地圖查看
-        </button>
+  if (matchedDemands.length > 0) return (
+    <div className="page-content" style={{ textAlign: 'center', padding: '60px 24px' }}>
+      <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
+      <h2 style={{ fontSize: 20, fontWeight: 800, color: 'var(--primary-dark)', marginBottom: 8 }}>物資發布成功！</h2>
+      <p style={{ color: 'var(--text-sub)', marginBottom: 16 }}>附近有 <strong>{matchedDemands.length}</strong> 筆相符的需求：</p>
+      <div style={{ background: 'var(--accent-light)', borderRadius: 'var(--r-md)', padding: 16, marginBottom: 20, textAlign: 'left' }}>
+        {matchedDemands.map(d => (
+          <div key={d.id} style={{ fontSize: 14, color: '#7a5c00', padding: '6px 0', borderBottom: '1px solid #f0e0a0' }}>
+            <i className="fa-solid fa-clipboard-list" style={{ marginRight: 8 }}></i>{d.title}
+          </div>
+        ))}
       </div>
-    )
-  }
+      <button className="btn btn-primary" onClick={() => navigate('/map')}>前往地圖查看</button>
+    </div>
+  )
 
   return (
-    <div className="max-w-lg mx-auto px-4 py-6">
-      <h1 className="text-xl font-bold text-gray-800 mb-4">📦 發布物資</h1>
+    <div className="page-content">
+      <div className="app-header"><h2><i className="fa-solid fa-box-open"></i>發布物資</h2></div>
 
       {/* 食品安全警告 Modal */}
       {showWarning && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 max-w-sm mx-4 shadow-xl">
-            <div className="text-3xl mb-3">⚠️</div>
-            <h3 className="font-bold text-gray-800 mb-2">食品安全提醒</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              本平台僅供善意分享，生鮮食品請自行評估食用安全。
-              請確實填寫有效期限，讓領取者能判斷食品狀態。
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
+          <div style={{ background: '#fff', borderRadius: 'var(--r-lg)', padding: 24, maxWidth: 320, margin: '0 16px', boxShadow: '0 8px 32px rgba(0,0,0,.2)' }}>
+            <div style={{ fontSize: 32, marginBottom: 12 }}>⚠️</div>
+            <h3 style={{ fontWeight: 800, marginBottom: 8 }}>食品安全提醒</h3>
+            <p style={{ fontSize: 14, color: 'var(--text-sub)', marginBottom: 16, lineHeight: 1.6 }}>
+              本平台僅供善意分享，生鮮食品請自行評估食用安全。請確實填寫有效期限。
             </p>
-            <button onClick={() => setShowWarning(false)} className="w-full bg-orange-500 text-white py-2 rounded-lg font-medium hover:bg-orange-600">
+            <button className="btn btn-primary" style={{ background: '#e67e22', height: 44, lineHeight: '44px', fontSize: 15 }} onClick={() => setShowWarning(false)}>
               我了解，繼續填寫
             </button>
           </div>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {error && <p className="text-red-500 text-sm bg-red-50 p-3 rounded-lg">{error}</p>}
+      <div style={{ padding: '16px 16px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+        {error && <div style={{ background: '#fee2e2', color: '#b91c1c', borderRadius: 'var(--r-md)', padding: '10px 14px', fontSize: 14 }}>{error}</div>}
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">標題 *</label>
-          <input name="title" required value={form.title} onChange={handleChange}
-            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
-            placeholder="例：自家種的蔬菜、舊電風扇" />
+        <div className="form-group">
+          <label className="form-label">標題 *</label>
+          <input name="title" required value={form.title} onChange={handleChange} className="form-input" placeholder="例：自家種的蔬菜、舊電風扇" />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">分類 *</label>
-          <select name="category" value={form.category} onChange={handleChange}
-            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400">
+        <div className="form-group">
+          <label className="form-label">分類 *</label>
+          <select name="category" value={form.category} onChange={handleChange} className="form-select">
             {CATEGORIES.map(c => <option key={c}>{c}</option>)}
           </select>
         </div>
 
         {form.category === '食品' && (
-          <div>
-            <label className="block text-sm font-medium text-orange-600 mb-1">有效期限 * <span className="text-xs font-normal">(食品必填)</span></label>
-            <input type="date" name="expiry_date" required value={form.expiry_date} onChange={handleChange}
-              className="w-full border border-orange-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400" />
+          <div className="form-group">
+            <label className="form-label" style={{ color: '#e67e22' }}>有效期限 * <span style={{ fontSize: 12, fontWeight: 400 }}>(食品必填)</span></label>
+            <input type="date" name="expiry_date" required value={form.expiry_date} onChange={handleChange} className="form-input" style={{ borderColor: '#f0a050' }} />
           </div>
         )}
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">新舊程度</label>
-          <select name="condition" value={form.condition} onChange={handleChange}
-            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400">
+        <div className="form-group">
+          <label className="form-label">新舊程度</label>
+          <select name="condition" value={form.condition} onChange={handleChange} className="form-select">
             {CONDITIONS.map(c => <option key={c}>{c}</option>)}
           </select>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">取件方式 *</label>
-          <select name="pickup_method" value={form.pickup_method} onChange={handleChange}
-            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400">
+        <div className="form-group">
+          <label className="form-label">取件方式 *</label>
+          <select name="pickup_method" value={form.pickup_method} onChange={handleChange} className="form-select">
             {PICKUP_METHODS.map(m => <option key={m}>{m}</option>)}
           </select>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">簡要說明</label>
-          <textarea name="description" value={form.description} onChange={handleChange} rows={3}
-            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
-            placeholder="補充說明..." />
+        <div className="form-group">
+          <label className="form-label">簡要說明</label>
+          <textarea name="description" value={form.description} onChange={handleChange} className="form-textarea" placeholder="補充說明..." />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">顯示地址（模糊即可）</label>
-          <input name="location_display" value={form.location_display} onChange={handleChange}
-            className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-400"
-            placeholder="例：信義區附近、中正路一帶" />
+        <div className="form-group">
+          <label className="form-label">顯示地址（模糊即可）</label>
+          <input name="location_display" value={form.location_display} onChange={handleChange} className="form-input" placeholder="例：信義區附近、中正路一帶" />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">物品照片</label>
-          <input type="file" accept="image/*" onChange={e => setPhoto(e.target.files[0])}
-            className="w-full text-sm text-gray-500" />
+        <div className="form-group">
+          <label className="form-label">物品照片</label>
+          <input type="file" accept="image/*" onChange={e => setPhoto(e.target.files[0])} style={{ fontSize: 14, color: 'var(--text-sub)' }} />
         </div>
 
-        <button type="submit" disabled={loading}
-          className="w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 disabled:opacity-50">
+        <button className="btn btn-primary" onClick={handleSubmit} disabled={loading} style={{ opacity: loading ? .5 : 1 }}>
+          <i className="fa-solid fa-paper-plane" style={{ marginRight: 8 }}></i>
           {loading ? '發布中...' : '發布物資'}
         </button>
-      </form>
+      </div>
     </div>
   )
 }

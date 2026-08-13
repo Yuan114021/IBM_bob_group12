@@ -1,10 +1,267 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;700;800&display=swap');
 
-/* Leaflet 地圖高度修正 */
+/* ── 林家羽設計系統：CSS 變數 ── */
+:root {
+  --primary:       #2D6A4F;
+  --primary-dark:  #1B4332;
+  --primary-light: #D8F3DC;
+  --accent:        #F7C948;
+  --accent-light:  #FFF9E0;
+  --bg:            #F8F5EE;
+  --surface:       #FFFFFF;
+  --border:        #DDD7CC;
+  --text:          #2A2A2A;
+  --text-sub:      #6A6460;
+  --r-md: 12px;
+  --r-lg: 20px;
+  --shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  font-size: 16px;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Leaflet 地圖 ── */
 .leaflet-container {
   height: 100%;
   width: 100%;
   z-index: 0;
 }
+
+/* ── 底部導覽列間距補償 ── */
+.page-content {
+  padding-bottom: 80px;
+}
+
+/* ── 共用 App Header ── */
+.app-header {
+  height: 56px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.app-header h2 {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+.app-header h2 i { margin-right: 8px; color: var(--primary); }
+
+/* ── 底部導覽列 ── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 64px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+  display: flex;
+  z-index: 50;
+}
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  color: var(--text-sub);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 0;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.nav-item.active { color: var(--primary); }
+.nav-item i { font-size: 20px; }
+
+/* ── 篩選列 ── */
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px;
+  overflow-x: auto;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  scrollbar-width: none;
+}
+.filter-bar::-webkit-scrollbar { display: none; }
+
+.chip {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border-radius: 18px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text-sub);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.chip.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+/* ── Tag 標籤 ── */
+.tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 7px;
+}
+.tag-green  { background: var(--primary-light); color: #1B4332; }
+.tag-yellow { background: var(--accent-light); color: #7a5c00; }
+.tag-gray   { background: #eee; color: #555; }
+
+/* ── 按鈕 ── */
+.btn {
+  display: block;
+  width: 100%;
+  height: 52px;
+  border-radius: var(--r-lg);
+  font-size: 17px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  line-height: 52px;
+  font-family: inherit;
+}
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  line-height: 48px;
+}
+.btn-sm {
+  display: inline-block;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  line-height: 38px;
+  font-family: inherit;
+}
+
+/* ── 表單 ── */
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label { font-size: 16px; font-weight: 700; color: var(--text); }
+.form-input,
+.form-select,
+.form-textarea {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-md);
+  font-size: 16px;
+  font-family: inherit;
+  color: var(--text);
+  padding: 12px 14px;
+  width: 100%;
+  outline: none;
+}
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--primary);
+  border-width: 2px;
+}
+.form-textarea { height: 80px; resize: none; line-height: 1.6; }
+
+/* ── section 標題 ── */
+.section-label {
+  font-size: 18px;
+  font-weight: 700;
+  padding: 16px 16px 10px;
+  color: var(--text);
+}
+.section-label i { color: var(--primary); margin-right: 6px; }
+
+/* ── 物資卡片 ── */
+.goods-card {
+  background: var(--surface);
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.goods-card .gc-top { padding: 14px 14px 10px; }
+.goods-card .gc-name {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.goods-card .gc-meta { font-size: 14px; color: var(--text-sub); line-height: 1.9; }
+.goods-card .gc-meta i { color: var(--primary); margin-right: 4px; width: 14px; }
+.goods-card .gc-actions {
+  border-top: 1px solid var(--border);
+  display: flex;
+}
+.goods-card .gc-btn {
+  flex: 1;
+  height: 44px;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: inherit;
+}
+.goods-card .gc-btn:first-child { color: var(--primary); border-right: 1px solid var(--border); }
+.goods-card .gc-btn:last-child  { color: #888; }
+
+/* ── 附近列表卡片 ── */
+.nearby-card {
+  background: var(--surface);
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 12px 14px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.ni-icon {
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 10px; flex-shrink: 0;
+}
+.ni-icon i { font-size: 20px; }
+.ni-icon.g { background: var(--primary-light); }
+.ni-icon.g i { color: var(--primary); }
+.ni-icon.b { background: #DBEAFE; }
+.ni-icon.b i { color: #1d4ed8; }
+.ni-icon.v { background: var(--accent-light); }
+.ni-icon.v i { color: #a07800; }
+.ni-info { flex: 1; }
+.ni-name { font-size: 16px; font-weight: 700; }
+.ni-meta { font-size: 13px; color: var(--text-sub); margin-top: 2px; }
+.ni-dist { font-size: 14px; font-weight: 700; color: var(--primary); flex-shrink: 0; }
