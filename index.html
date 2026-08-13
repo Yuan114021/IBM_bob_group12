@@ -227,19 +227,19 @@
       <div class="quick-grid">
         <div class="quick-card" onclick="show('goods',document.querySelectorAll('.tab-btn')[1])">
           <div class="q-icon"><i class="fa-solid fa-box-open"></i></div>
-          <div class="q-name">物資媒合</div><div class="q-count" id="qGoodsCount">讀取中…</div>
+          <div class="q-name">瀏覽物資</div><div class="q-count" id="qGoodsCount">讀取中…</div>
         </div>
-        <div class="quick-card" onclick="show('volunteer',document.querySelectorAll('.tab-btn')[2])">
-          <div class="q-icon"><i class="fa-solid fa-hands-holding-circle"></i></div>
-          <div class="q-name">志工媒合</div><div class="q-count" id="qVolCount">讀取中…</div>
+        <div class="quick-card" onclick="show('map',document.querySelectorAll('.tab-btn')[5])">
+          <div class="q-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+          <div class="q-name">查看地圖</div><div class="q-count">附近資源</div>
         </div>
         <div class="quick-card" onclick="show('request',document.querySelectorAll('.tab-btn')[3])">
           <div class="q-icon"><i class="fa-solid fa-clipboard-list"></i></div>
-          <div class="q-name">需求登記</div><div class="q-count">匿名安全</div>
+          <div class="q-name">登記需求</div><div class="q-count">告訴鄰居</div>
         </div>
-        <div class="quick-card" onclick="show('chat',document.querySelectorAll('.tab-btn')[4])">
-          <div class="q-icon"><i class="fa-solid fa-comments"></i></div>
-          <div class="q-name">匿名聊天</div><div class="q-count">免留個資</div>
+        <div class="quick-card" onclick="showPublishModal()">
+          <div class="q-icon"><i class="fa-solid fa-plus-circle"></i></div>
+          <div class="q-name">發布物資</div><div class="q-count">分享給大家</div>
         </div>
       </div>
       <div class="section-label"><i class="fa-solid fa-bullhorn"></i>社區公告</div>
@@ -281,10 +281,11 @@
     <div class="filter-bar">
       <div class="chip active" onclick="filterGoods('全部',this)">全部</div>
       <div class="chip" onclick="filterGoods('衣物',this)"><i class="fa-solid fa-shirt"></i> 衣物</div>
-      <div class="chip" onclick="filterGoods('食物/飲水',this)"><i class="fa-solid fa-bowl-rice"></i> 食物</div>
+      <div class="chip" onclick="filterGoods('食品',this)"><i class="fa-solid fa-bowl-rice"></i> 食品</div>
+      <div class="chip" onclick="filterGoods('家電',this)"><i class="fa-solid fa-plug"></i> 家電</div>
       <div class="chip" onclick="filterGoods('日用品',this)"><i class="fa-solid fa-couch"></i> 日用品</div>
       <div class="chip" onclick="filterGoods('藥品',this)"><i class="fa-solid fa-pills"></i> 藥品</div>
-      <div class="chip" onclick="filterGoods('電器',this)"><i class="fa-solid fa-plug"></i> 電器</div>
+      <div class="chip" onclick="filterGoods('其他',this)"><i class="fa-solid fa-box"></i> 其他</div>
     </div>
     <div class="scroll-area">
       <div id="goodsList" class="goods-list"></div>
@@ -308,34 +309,40 @@
 
   <!-- ══ 志工媒合 ══ -->
   <div class="screen" id="s-volunteer">
-    <div class="app-header"><h2><i class="fa-solid fa-hands-holding-circle"></i>志工媒合</h2></div>
-    <!-- 配對統計列（蔡函蓁） -->
-    <div style="display:flex;background:var(--surface);border-bottom:1px solid var(--border);">
-      <div style="flex:1;padding:12px 0;text-align:center;border-right:1px solid var(--border);">
-        <div style="font-size:20px;font-weight:800;color:var(--primary);" id="statElderCount">0</div>
-        <div style="font-size:11px;color:var(--text-sub);margin-top:2px;">長者需求</div>
-      </div>
-      <div style="flex:1;padding:12px 0;text-align:center;border-right:1px solid var(--border);">
-        <div style="font-size:20px;font-weight:800;color:var(--primary);" id="statVolCount">0</div>
-        <div style="font-size:11px;color:var(--text-sub);margin-top:2px;">志工登記</div>
-      </div>
-      <div style="flex:1;padding:12px 0;text-align:center;">
-        <div style="font-size:20px;font-weight:800;color:#7c3aed;" id="statMatchCount">0</div>
-        <div style="font-size:11px;color:var(--text-sub);margin-top:2px;">成功配對</div>
-      </div>
+    <div class="app-header"><h2><i class="fa-solid fa-handshake"></i>志工媒合</h2></div>
+    <!-- 頂部三頁籤（蔡函蓁：配對結果 / 提交需求 / 加入志工） -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:10px 12px;background:var(--surface);border-bottom:1px solid var(--border);">
+      <button id="vtab-match" onclick="switchVolTab('match')" style="background:var(--primary-light);border:1.5px solid var(--primary);color:var(--primary-dark);border-radius:var(--r-md);padding:9px 4px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;"><i class="fa-solid fa-handshake" style="font-size:17px;"></i>配對結果</button>
+      <button id="vtab-request" onclick="switchVolTab('request')" style="background:var(--bg);border:1.5px solid var(--border);color:var(--text-sub);border-radius:var(--r-md);padding:9px 4px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;"><i class="fa-solid fa-clipboard-list" style="font-size:17px;"></i>提交需求</button>
+      <button id="vtab-register" onclick="showVolRegModal()" style="background:var(--bg);border:1.5px solid var(--border);color:var(--text-sub);border-radius:var(--r-md);padding:9px 4px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;"><i class="fa-solid fa-user-plus" style="font-size:17px;"></i>加入志工</button>
     </div>
-    <div class="filter-bar">
-      <div class="chip active">全部</div>
-      <div class="chip"><i class="fa-solid fa-utensils"></i> 送餐</div>
-      <div class="chip"><i class="fa-solid fa-person-walking"></i> 陪伴</div>
-      <div class="chip"><i class="fa-solid fa-cart-shopping"></i> 代買</div>
-      <div class="chip"><i class="fa-solid fa-car"></i> 交通</div>
-    </div>
-    <div class="scroll-area">
-      <div class="section-label"><i class="fa-solid fa-list-check"></i>志工活動</div>
+
+    <!-- 配對結果頁 -->
+    <div id="vpanel-match" class="scroll-area">
+      <!-- 統計 -->
+      <div style="display:flex;background:var(--surface);border-bottom:1px solid var(--border);">
+        <div style="flex:1;padding:12px 0;text-align:center;border-right:1px solid var(--border);">
+          <div style="font-size:20px;font-weight:800;color:var(--primary);" id="statElderCount">0</div>
+          <div style="font-size:11px;color:var(--text-sub);margin-top:2px;">銀髮族登記</div>
+        </div>
+        <div style="flex:1;padding:12px 0;text-align:center;border-right:1px solid var(--border);">
+          <div style="font-size:20px;font-weight:800;color:var(--primary);" id="statVolCount">0</div>
+          <div style="font-size:11px;color:var(--text-sub);margin-top:2px;">志工登記</div>
+        </div>
+        <div style="flex:1;padding:12px 0;text-align:center;">
+          <div style="font-size:20px;font-weight:800;color:#7c3aed;" id="statMatchCount">0</div>
+          <div style="font-size:11px;color:var(--text-sub);margin-top:2px;">成功配對</div>
+        </div>
+      </div>
+      <div class="section-label"><i class="fa-solid fa-link"></i>配對結果</div>
       <div class="vol-list" id="volMatchList"></div>
+      <!-- 等待配對區（蔡函蓁） -->
+      <div id="unmatchedSection" style="display:none;">
+        <div class="section-label"><i class="fa-solid fa-clock"></i>等待配對</div>
+        <div id="unmatchedList" style="padding:0 16px;display:flex;flex-direction:column;gap:8px;padding-bottom:12px;"></div>
+      </div>
       <div style="padding:0 16px 8px;display:flex;gap:8px;">
-        <button class="btn btn-outline" style="height:44px;line-height:44px;font-size:14px;" onclick="show('request',document.querySelectorAll('.tab-btn')[3])">
+        <button class="btn btn-outline" style="height:44px;line-height:44px;font-size:14px;" onclick="switchVolTab('request')">
           <i class="fa-solid fa-heart"></i> 長者需求登記
         </button>
         <button class="btn btn-primary" style="height:44px;line-height:44px;font-size:14px;" onclick="showVolRegModal()">
@@ -343,6 +350,59 @@
         </button>
       </div>
     </div>
+
+    <!-- 提交需求頁（蔡函蓁 MatchingPage request tab） -->
+    <div id="vpanel-request" class="scroll-area" style="display:none;">
+      <div style="padding:16px;display:flex;flex-direction:column;gap:14px;">
+        <div id="volReqError" style="display:none;background:#fee2e2;color:#b91c1c;border-radius:var(--r-md);padding:10px 14px;font-size:13px;"></div>
+        <div class="form-group">
+          <label class="form-label">需求類型</label>
+          <select id="vreqType" class="form-select" onchange="toggleVolReqSupply(this.value)">
+            <option>尿布褲片</option><option>居家清潔</option>
+            <option>陪同就醫</option><option selected>居家照護</option><option>其他</option>
+          </select>
+        </div>
+        <!-- 物資細項（僅物資類需求顯示） -->
+        <div id="vreqSupplyFields" style="display:none;">
+          <div class="form-group">
+            <label class="form-label">物資分類</label>
+            <select id="vreqCat" class="form-select">
+              <option value="">請選擇…</option>
+              <option>衣物/衣飾</option><option>餐具</option><option>衛生紙</option>
+              <option>食品</option><option>日用品</option><option>其他</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">數量</label>
+            <input type="text" id="vreqQty" class="form-input" placeholder="例：2 包、1 件" />
+          </div>
+          <!-- 緊急程度按鈕（蔡函蓁風格） -->
+          <div class="form-group">
+            <label class="form-label">緊急程度</label>
+            <div style="display:flex;gap:10px;">
+              <button type="button" id="urgBtn-一般" onclick="setUrgency('一般')" style="flex:1;padding:10px;border-radius:var(--r-md);font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;background:var(--primary-light);color:var(--primary-dark);border:1.5px solid var(--primary);">📋 一般</button>
+              <button type="button" id="urgBtn-急迫" onclick="setUrgency('急迫')" style="flex:1;padding:10px;border-radius:var(--r-md);font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;background:var(--surface);color:var(--text-sub);border:1.5px solid var(--border);">🚨 急迫</button>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">說明</label>
+          <textarea id="vreqDesc" class="form-textarea" placeholder="請詳細說明您的需求…"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">聯絡電話（選填）</label>
+          <input type="tel" id="vreqPhone" class="form-input" placeholder="0912-345-678" />
+        </div>
+        <div style="background:var(--accent-light);border-radius:var(--r-md);padding:10px 14px;font-size:13px;color:#7a5c00;">
+          <i class="fa-solid fa-shield-halved" style="margin-right:6px;"></i>
+          提交後系統將產生匿名代碼，可用來追蹤需求狀態，不會洩露個人資訊。
+        </div>
+        <button class="btn btn-primary" onclick="submitVolReq()">
+          <i class="fa-solid fa-paper-plane"></i> 送出需求
+        </button>
+      </div>
+    </div>
+
     <nav class="bottom-nav">
       <div class="nav-item" onclick="show('home',document.querySelectorAll('.tab-btn')[0])"><i class="fa-solid fa-house"></i>首頁</div>
       <div class="nav-item" onclick="show('goods',document.querySelectorAll('.tab-btn')[1])"><i class="fa-solid fa-box-open"></i>物資</div>
@@ -380,8 +440,8 @@
             <label class="form-label">物資類別</label>
             <select id="supplyCat" class="form-select">
               <option value="">請選擇…</option>
-              <option>食物/飲水</option><option>日用品</option>
-              <option>藥品</option><option>衣物</option><option>電器</option><option>其他</option>
+              <option>食品</option><option>衣物</option>
+              <option>家電</option><option>日用品</option><option>藥品</option><option>其他</option>
             </select>
           </div>
           <div class="form-group">
@@ -592,9 +652,14 @@
 <div id="successModal" class="modal-overlay" style="display:none;">
   <div class="modal-box">
     <div style="font-size:44px;margin-bottom:12px;">✅</div>
-    <h2 style="font-size:18px;font-weight:800;margin-bottom:8px;">需求登記成功！</h2>
+    <h2 style="font-size:18px;font-weight:800;margin-bottom:8px;">發布成功！</h2>
     <p style="font-size:13px;color:var(--text-sub);margin-bottom:8px;">您的匿名代號</p>
     <div id="modalAnonId" style="font-size:20px;font-weight:800;color:var(--primary);background:var(--primary-light);border-radius:12px;padding:12px;margin-bottom:14px;"></div>
+    <!-- 配對需求（蔡函蓁：發布後顯示相符需求） -->
+    <div id="modalMatchedDemands" style="display:none;background:var(--accent-light);border-radius:12px;padding:12px 14px;margin-bottom:14px;text-align:left;">
+      <p style="font-size:12px;font-weight:700;color:#7a5c00;margin-bottom:8px;">🎉 附近有相符的需求！</p>
+      <div id="modalMatchedList" style="display:flex;flex-direction:column;gap:6px;"></div>
+    </div>
     <div style="background:#f3f4f6;border-radius:12px;padding:14px;margin-bottom:14px;text-align:left;">
       <p style="font-size:12px;font-weight:700;color:var(--text-sub);margin-bottom:8px;">💬 聊天室代碼</p>
       <div style="display:flex;gap:8px;align-items:center;">
@@ -699,10 +764,10 @@
     <div class="form-group">
       <label class="form-label">類別 <span style="color:#c0392b">*</span></label>
       <select id="pubCategory" class="form-select" onchange="checkFoodWarning(this.value)">
-        <option value="食物/飲水">🍚 食物／飲水</option>
+        <option value="食品">🍚 食品</option>
         <option value="衣物">👕 衣物</option>
+        <option value="家電">🔌 家電</option>
         <option value="日用品">🏠 日用品</option>
-        <option value="電器">🔌 電器</option>
         <option value="藥品">💊 藥品</option>
         <option value="其他">📦 其他</option>
       </select>
@@ -716,9 +781,9 @@
       <label class="form-label">物品狀況</label>
       <select id="pubCondition" class="form-select">
         <option value="全新">✨ 全新</option>
-        <option value="近全新" selected>👍 近全新</option>
-        <option value="良好">😊 良好</option>
-        <option value="普通">📦 普通</option>
+        <option value="良好" selected>👍 良好</option>
+        <option value="普通">😊 普通</option>
+        <option value="堪用">📦 堪用</option>
       </select>
     </div>
     <div class="form-group">
@@ -864,7 +929,7 @@ function showPublishModal() {
 }
 
 function checkFoodWarning(val) {
-  const isFood = val === '食物/飲水';
+  const isFood = val === '食品';
   document.getElementById('expiryGroup').style.display = isFood ? 'block' : 'none';
   if (isFood) document.getElementById('foodWarningModal').style.display = 'flex';
 }
@@ -880,7 +945,7 @@ function submitPublish() {
   if (!title)    { errEl.textContent='請填寫物資標題'; errEl.style.display='block'; return; }
   if (!desc)     { errEl.textContent='請填寫物品說明'; errEl.style.display='block'; return; }
   if (!location) { errEl.textContent='請填寫取貨地址'; errEl.style.display='block'; return; }
-  if (category === '食物/飲水' && !expiry) { errEl.textContent='食物類必須填寫有效期限'; errEl.style.display='block'; return; }
+  if (category === '食品' && !expiry) { errEl.textContent='食品類必須填寫有效期限'; errEl.style.display='block'; return; }
 
   const record = {
     id: 'PUB_' + Date.now(),
@@ -896,53 +961,181 @@ function submitPublish() {
 
   // 重置表單
   ['pubTitle','pubDesc','pubLocation','pubExpiry'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('pubCategory').value  = '食物/飲水';
-  document.getElementById('pubCondition').value = '近全新';
+  document.getElementById('pubCategory').value  = '食品';
+  document.getElementById('pubCondition').value = '良好';
   document.getElementById('pubPickup').value    = '自取';
   document.getElementById('expiryGroup').style.display = 'none';
 
+  // 發布後：比對相符需求（蔡函蓁：matched_demands 效果）
+  const needs = loadFromStorage('needs_list', []).filter(r => r.status !== 'rejected');
+  const matched = needs.filter(r =>
+    (r.supply?.category || r.type || '').includes(category) ||
+    category.includes(r.supply?.category || '')
+  );
+  const anonId = record.id;
+  document.getElementById('modalAnonId').textContent  = anonId;
+  document.getElementById('modalChatCode').textContent = anonId;
+  // 顯示配對需求
+  const matchEl = document.getElementById('modalMatchedDemands');
+  const matchList = document.getElementById('modalMatchedList');
+  if (matched.length > 0) {
+    matchEl.style.display = 'block';
+    matchList.innerHTML = matched.slice(0,3).map(r =>
+      `<div style="font-size:13px;color:#7a5c00;padding:5px 0;border-bottom:1px solid #f0e0a0;">
+        <i class="fa-solid fa-clipboard-list" style="margin-right:6px;"></i>${r.supply?.category || r.type}${r.supply?.qty ? '（'+r.supply.qty+'）':''}</div>`
+    ).join('');
+  } else {
+    matchEl.style.display = 'none';
+  }
+  document.getElementById('successModal').style.display = 'flex';
   renderGoods();
-  alert('✅ 物資發布成功！審核後即可在物資列表看到。');
 }
 
-// ── 志工配對渲染（整合蔡函蓁：配對統計） ──
+// ── 志工媒合：子頁籤切換 ──
+function switchVolTab(tab) {
+  ['match','request'].forEach(t => {
+    const panel = document.getElementById('vpanel-' + t);
+    const btn   = document.getElementById('vtab-' + t);
+    if (panel) panel.style.display = t === tab ? 'flex' : 'none';
+    if (btn) {
+      btn.style.background     = t === tab ? 'var(--primary-light)' : 'var(--bg)';
+      btn.style.borderColor    = t === tab ? 'var(--primary)'       : 'var(--border)';
+      btn.style.color          = t === tab ? 'var(--primary-dark)'  : 'var(--text-sub)';
+    }
+  });
+  if (tab === 'match') { const p = document.getElementById('vpanel-match'); if(p) p.style.display='flex'; }
+}
+
+// ── 志工媒合：提交需求（蔡函蓁 MatchingPage） ──
+let _volReqUrgency = '一般';
+function setUrgency(val) {
+  _volReqUrgency = val;
+  ['一般','急迫'].forEach(u => {
+    const btn = document.getElementById('urgBtn-' + u);
+    if (!btn) return;
+    const isActive = u === val;
+    btn.style.background  = isActive ? (u==='急迫' ? '#fee2e2' : 'var(--primary-light)') : 'var(--surface)';
+    btn.style.color       = isActive ? (u==='急迫' ? '#b91c1c' : 'var(--primary-dark)')  : 'var(--text-sub)';
+    btn.style.borderColor = isActive ? (u==='急迫' ? '#fca5a5' : 'var(--primary)')        : 'var(--border)';
+  });
+}
+function toggleVolReqSupply(val) {
+  const supplyTypes = ['尿布褲片','食品','日用品'];
+  document.getElementById('vreqSupplyFields').style.display = supplyTypes.includes(val) ? 'block' : 'none';
+}
+function submitVolReq() {
+  const type = document.getElementById('vreqType').value;
+  const desc = document.getElementById('vreqDesc').value.trim();
+  const errEl = document.getElementById('volReqError');
+  if (!desc) { errEl.textContent='請填寫說明'; errEl.style.display='block'; return; }
+  errEl.style.display = 'none';
+  const anonId = generateAnonymousId();
+  const record = {
+    id: anonId, type, desc,
+    phone: document.getElementById('vreqPhone').value.trim(),
+    category: document.getElementById('vreqCat')?.value || '',
+    quantity: document.getElementById('vreqQty')?.value.trim() || '',
+    urgency: _volReqUrgency,
+    status: 'pending', createdAt: new Date().toISOString()
+  };
+  const list = loadFromStorage('service_requests', []);
+  list.unshift(record);
+  saveToStorage('service_requests', list);
+  // 重置
+  document.getElementById('vreqDesc').value = '';
+  document.getElementById('vreqPhone').value = '';
+  // 顯示成功
+  alert(`✅ 需求已提交！\n您的匿名代碼：${anonId}\n\n請記下此代碼以便後續查詢。`);
+  switchVolTab('match');
+}
+
+// ── 志工配對渲染（整合蔡函蓁：配對統計 + 等待配對） ──
 function renderVolMatch() {
   const vols   = loadFromStorage('volunteers', []);
   const elders = loadFromStorage('elders', []);
+  const svcReqs = loadFromStorage('service_requests', []);
   const el     = document.getElementById('volMatchList');
   document.getElementById('qVolCount').textContent = vols.length ? vols.length + ' 人報名中' : '暫無資料';
 
-  // 配對統計（蔡函蓁）
   function intersect(a, b) { return (a||[]).filter(v => (b||[]).includes(v)); }
-  const matches = elders.filter(elder =>
+  const matchedElders = elders.filter(elder =>
     vols.some(vol =>
       intersect(elder.services, vol.services).length > 0 &&
       intersect(elder.times, vol.times).length > 0
     )
   );
-  document.getElementById('statElderCount').textContent = elders.length;
+  document.getElementById('statElderCount').textContent = elders.length + svcReqs.length;
   document.getElementById('statVolCount').textContent   = vols.length;
-  document.getElementById('statMatchCount').textContent = matches.length;
+  document.getElementById('statMatchCount').textContent = matchedElders.length;
 
-  if (!vols.length) {
-    el.innerHTML = `<div style="text-align:center;color:var(--text-sub);padding:24px 0;font-size:14px;">目前沒有志工登記</div>`;
-    return;
+  // 配對結果卡（蔡函蓁：elder ↔ volunteer 對卡）
+  const paired = [];
+  const usedVols = new Set();
+  elders.forEach(elder => {
+    const matched = vols.find(vol =>
+      !usedVols.has(vol.id) &&
+      intersect(elder.services, vol.services).length > 0 &&
+      intersect(elder.times, vol.times).length > 0
+    );
+    if (matched) { paired.push({ elder, vol: matched }); usedVols.add(matched.id); }
+  });
+
+  if (!paired.length && !vols.length) {
+    el.innerHTML = `<div style="text-align:center;color:var(--text-sub);padding:24px 0;font-size:14px;">目前沒有志工登記<br/><span style="font-size:12px;">點「加入志工」來開始媒合</span></div>`;
+  } else if (paired.length) {
+    el.innerHTML = paired.map(p => `
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:14px;box-shadow:var(--shadow);margin-bottom:0;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <div style="flex:1;background:var(--primary-light);border-radius:10px;padding:8px 10px;text-align:center;">
+            <div style="font-size:11px;color:var(--text-sub);">銀髮族</div>
+            <div style="font-size:14px;font-weight:700;color:var(--primary-dark);">${p.elder.name}</div>
+          </div>
+          <i class="fa-solid fa-handshake" style="font-size:18px;color:var(--primary);"></i>
+          <div style="flex:1;background:var(--accent-light);border-radius:10px;padding:8px 10px;text-align:center;">
+            <div style="font-size:11px;color:var(--text-sub);">志工</div>
+            <div style="font-size:14px;font-weight:700;color:#7a5c00;">${p.vol.name}</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);">服務：${(p.elder.services||[]).join('、')}</div>
+        <button class="btn-sm btn-primary" style="margin-top:8px;" onclick="goChatRoom('MATCH_${p.elder.id||Date.now()}')">💬 開啟聊天</button>
+      </div>`).join('');
+  } else {
+    el.innerHTML = vols.map(v => `
+      <div class="vol-card">
+        <div class="vc-head">
+          <div class="vc-name">${v.name}</div>
+          ${v.verified ? '<span class="badge-vol">💜 愛心志工</span>' : '<span class="tag tag-gray">認證中</span>'}
+        </div>
+        <div class="vc-meta">
+          <div><i class="fa-solid fa-hand-holding-heart"></i>${(v.services||[]).join('、') || '–'}</div>
+          <div><i class="fa-regular fa-clock"></i>${(v.times||[]).join('、') || '–'}</div>
+        </div>
+        <div class="vc-footer">
+          <div class="vc-quota">可服務時段 <span>${(v.times||[]).length}</span> 種</div>
+          <button class="btn-sm btn-primary" onclick="goChatRoom('VOL_${v.id}')">聯絡</button>
+        </div>
+      </div>`).join('');
   }
-  el.innerHTML = vols.map(v => `
-    <div class="vol-card">
-      <div class="vc-head">
-        <div class="vc-name">${v.name}</div>
-        ${v.verified ? '<span class="badge-vol">💜 愛心志工</span>' : '<span class="tag tag-gray">認證中</span>'}
-      </div>
-      <div class="vc-meta">
-        <div><i class="fa-solid fa-hand-holding-heart"></i>${(v.services||[]).join('、') || '–'}</div>
-        <div><i class="fa-regular fa-clock"></i>${(v.times||[]).join('、') || '–'}</div>
-      </div>
-      <div class="vc-footer">
-        <div class="vc-quota">可服務時段 <span>${(v.times||[]).length}</span> 種</div>
-        <button class="btn-sm btn-primary" onclick="goChatRoom('VOL_${v.id}')">聯絡</button>
-      </div>
-    </div>`).join('');
+
+  // 等待配對（未配對長者 + service_requests）
+  const unmatchedElders = elders.filter(e => !paired.some(p => p.elder.id === e.id));
+  const allUnmatched = [
+    ...unmatchedElders.map(e => ({ name: e.name, type: '銀髮族' })),
+    ...svcReqs.filter(r => r.status === 'pending').map(r => ({ name: r.type + '需求', type: r.urgency === '急迫' ? '🚨急迫' : '一般' }))
+  ];
+  const unmatchedSec = document.getElementById('unmatchedSection');
+  const unmatchedList = document.getElementById('unmatchedList');
+  if (allUnmatched.length) {
+    unmatchedSec.style.display = 'block';
+    unmatchedList.innerHTML = allUnmatched.map(u =>
+      `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-weight:600;">${u.name}</span>
+        <span class="tag tag-yellow">${u.type === '🚨急迫' ? '<span style="color:#c0392b;">🚨 急迫</span>' : '等待志工'}</span>
+      </div>`
+    ).join('');
+  } else {
+    unmatchedSec.style.display = 'none';
+  }
 }
 
 // ── 需求登記（整合蔡函蓁：取貨方式+地址） ──
