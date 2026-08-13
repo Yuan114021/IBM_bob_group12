@@ -33,6 +33,9 @@ export default function PublishPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (!form.title.trim()) { setError('請填寫物品標題'); return }
+    if (!form.description.trim()) { setError('請填寫簡要說明'); return }
+    if (!form.location_display.trim()) { setError('請填寫顯示地址'); return }
     if (form.category === '食品' && !form.expiry_date) { setError('食品類別必須填寫有效期限'); return }
     setLoading(true); setError('')
     try {
@@ -110,7 +113,7 @@ export default function PublishPage() {
         )}
 
         <div className="form-group">
-          <label className="form-label">新舊程度</label>
+          <label className="form-label">新舊程度 *</label>
           <select name="condition" value={form.condition} onChange={handleChange} className="form-select">
             {CONDITIONS.map(c => <option key={c}>{c}</option>)}
           </select>
@@ -124,13 +127,13 @@ export default function PublishPage() {
         </div>
 
         <div className="form-group">
-          <label className="form-label">簡要說明</label>
-          <textarea name="description" value={form.description} onChange={handleChange} className="form-textarea" placeholder="補充說明..." />
+          <label className="form-label">簡要說明 *</label>
+          <textarea name="description" required value={form.description} onChange={handleChange} className="form-textarea" placeholder="請描述物品狀況、數量等資訊..." />
         </div>
 
         <div className="form-group">
-          <label className="form-label">顯示地址（模糊即可）</label>
-          <input name="location_display" value={form.location_display} onChange={handleChange} className="form-input" placeholder="例：信義區附近、中正路一帶" />
+          <label className="form-label">顯示地址 * <span style={{ fontSize: 12, fontWeight: 400 }}>(模糊即可，不需精確門牌)</span></label>
+          <input name="location_display" required value={form.location_display} onChange={handleChange} className="form-input" placeholder="例：信義區附近、中正路一帶" />
         </div>
 
         <div className="form-group">
