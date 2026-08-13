@@ -84,8 +84,16 @@ export default function HomePage() {
       </div>
       <div style={{ padding: '0 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
         {[
-          { title: '食品分享安全提醒', date: '2025/07/10', tag: '置頂', body: '食品類物資請確實標示有效期限，領取者請自行評估食用安全。' },
-          { title: '新功能：需求媒合上線', date: '2025/07/08', tag: null, body: '發布物資時，系統將自動比對附近未滿足的需求，方便直接聯繫。' },
+          {
+            title: '食品分享安全提醒', date: '2025/07/10', tag: '置頂',
+            body: '食品類物資請確實標示有效期限，領取者請自行評估食用安全。',
+            link: 'https://www.fda.gov.tw/TC/site.aspx?sid=11', linkText: '食藥署食品安全資訊', internal: false,
+          },
+          {
+            title: '新功能：需求媒合上線', date: '2025/07/08', tag: null,
+            body: '發布物資時，系統將自動比對附近未滿足的需求，方便直接聯繫。',
+            link: '/demand', linkText: '立即登記需求', internal: true,
+          },
         ].map(a => {
           const isOpen = openAnnouncement === a.title
           return (
@@ -113,7 +121,13 @@ export default function HomePage() {
               </div>
               {isOpen && (
                 <div style={{ fontSize: 14, color: '#555', lineHeight: 1.65, borderTop: '1px solid var(--border)', paddingTop: 8, marginTop: 4 }}>
-                  {a.body}
+                  <div style={{ marginBottom: 10 }}>{a.body}</div>
+                  <div
+                    onClick={e => { e.stopPropagation(); a.internal ? navigate(a.link) : window.open(a.link, '_blank') }}
+                    style={{ fontSize: 13, color: 'var(--primary)', fontWeight: 600, cursor: 'pointer' }}
+                  >
+                    <i className="fa-solid fa-arrow-up-right-from-square" style={{ marginRight: 4 }}></i>{a.linkText}
+                  </div>
                 </div>
               )}
             </div>
