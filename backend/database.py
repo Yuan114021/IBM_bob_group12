@@ -8,9 +8,11 @@ SQLALCHEMY_DATABASE_URL = os.environ.get(
     "sqlite:///./community_share.db"
 )
 
-# Render 提供的 PostgreSQL URL 以 postgres:// 開頭，需改為 postgresql://
+# 統一將 postgres:// / postgresql:// 轉成 postgresql+pg8000://（純 Python driver，相容所有 Python 版本）
 if SQLALCHEMY_DATABASE_URL.startswith("postgres://"):
-    SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace("postgres://", "postgresql://", 1)
+    SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace("postgres://", "postgresql+pg8000://", 1)
+elif SQLALCHEMY_DATABASE_URL.startswith("postgresql://"):
+    SQLALCHEMY_DATABASE_URL = SQLALCHEMY_DATABASE_URL.replace("postgresql://", "postgresql+pg8000://", 1)
 
 connect_args = {"check_same_thread": False} if SQLALCHEMY_DATABASE_URL.startswith("sqlite") else {}
 
