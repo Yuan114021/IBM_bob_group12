@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>好厝邊 — 代表封面</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  background: #F8F5EE;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ── 背景裝飾圓 ── */
+.bg-circle {
+  position: fixed;
+  border-radius: 50%;
+  opacity: 0.07;
+  background: #2D6A4F;
+}
+.bg-circle.c1 { width: 600px; height: 600px; top: -200px; right: -150px; }
+.bg-circle.c2 { width: 400px; height: 400px; bottom: -150px; left: -100px; }
+.bg-circle.c3 { width: 200px; height: 200px; top: 40%; left: 20%; background: #F7C948; opacity: 0.12; }
+
+/* ── 主容器 ── */
+.cover {
+  position: relative;
+  width: 900px;
+  min-height: 560px;
+  display: flex;
+  align-items: stretch;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.14);
+}
+
+/* ── 左側主視覺 ── */
+.cover-left {
+  flex: 1.2;
+  background: #2D6A4F;
+  padding: 56px 52px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 左側裝飾圓 */
+.deco-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+}
+.deco-circle.d1 { width: 300px; height: 300px; top: -80px; right: -80px; }
+.deco-circle.d2 { width: 180px; height: 180px; bottom: 40px; right: 60px; }
+.deco-circle.d3 { width: 80px;  height: 80px;  bottom: 120px; right: 180px; background: rgba(247,201,72,0.15); }
+
+.cover-left .logo-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  z-index: 1;
+}
+.logo-icon {
+  width: 52px; height: 52px;
+  background: #F7C948;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.logo-icon i { font-size: 26px; color: #2D6A4F; }
+.logo-text {
+  font-size: 28px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 2px;
+}
+.logo-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+.cover-left .hero {
+  position: relative;
+  z-index: 1;
+}
+.hero-tag {
+  display: inline-block;
+  background: rgba(247,201,72,0.2);
+  border: 1px solid rgba(247,201,72,0.4);
+  color: #F7C948;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+.hero h1 {
+  font-size: 42px;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.25;
+  margin-bottom: 16px;
+}
+.hero h1 span { color: #F7C948; }
+.hero p {
+  font-size: 16px;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.8;
+  max-width: 320px;
+}
+
+.cover-left .stat-row {
+  display: flex;
+  gap: 32px;
+  position: relative;
+  z-index: 1;
+}
+.stat-item { }
+.stat-num {
+  font-size: 28px;
+  font-weight: 900;
+  color: #F7C948;
+  line-height: 1;
+}
+.stat-lbl {
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+  margin-top: 4px;
+  letter-spacing: 0.5px;
+}
+
+/* ── 右側功能卡 ── */
+.cover-right {
+  flex: 1;
+  background: #fff;
+  padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cover-right .right-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #2D6A4F;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.right-title::before {
+  content: '';
+  display: block;
+  width: 4px; height: 18px;
+  background: #F7C948;
+  border-radius: 2px;
+}
+
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+}
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1.5px solid #E8E0D5;
+  background: #F8F5EE;
+  transition: all .2s;
+}
+.feature-item.highlight {
+  background: #D8F3DC;
+  border-color: #2D6A4F;
+}
+.fi-icon {
+  width: 42px; height: 42px;
+  border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.fi-icon.green { background: #2D6A4F; }
+.fi-icon.yellow { background: #F7C948; }
+.fi-icon.light { background: #D8F3DC; }
+.fi-icon.cream { background: #FFF9E0; border: 1.5px solid #F7C948; }
+.fi-icon i { font-size: 18px; color: #fff; }
+.fi-icon.light i { color: #2D6A4F; }
+.fi-icon.cream i { color: #a07800; }
+.fi-text .fi-name { font-size: 15px; font-weight: 700; color: #2A2A2A; }
+.fi-text .fi-desc { font-size: 12px; color: #6A6460; margin-top: 2px; }
+
+/* ── 底部標語 ── */
+.cover-right .bottom-tagline {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #E8E0D5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tagline-text {
+  font-size: 13px;
+  color: #6A6460;
+  line-height: 1.6;
+}
+.tagline-text strong { color: #2D6A4F; }
+.qr-placeholder {
+  width: 52px; height: 52px;
+  border-radius: 10px;
+  background: #F8F5EE;
+  border: 1.5px solid #E8E0D5;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.qr-placeholder i { font-size: 22px; color: #2D6A4F; }
+
+/* ── 手機預覽（右下角裝飾） ── */
+.phone-preview {
+  position: absolute;
+  bottom: -20px;
+  right: -10px;
+  width: 100px;
+  height: 180px;
+  background: #1B4332;
+  border-radius: 18px;
+  border: 3px solid rgba(255,255,255,0.15);
+  overflow: hidden;
+  transform: rotate(6deg);
+  opacity: 0.5;
+  z-index: 0;
+}
+.phone-preview .ph-screen {
+  background: #2D6A4F;
+  width: 100%; height: 100%;
+  padding: 10px 8px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.ph-bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.2); }
+.ph-bar.w60 { width: 60%; }
+.ph-bar.w80 { width: 80%; }
+.ph-bar.w40 { width: 40%; }
+.ph-card { height: 30px; border-radius: 6px; background: rgba(255,255,255,0.1); margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<!-- 背景裝飾 -->
+<div class="bg-circle c1"></div>
+<div class="bg-circle c2"></div>
+<div class="bg-circle c3"></div>
+
+<div class="cover">
+
+  <!-- 左側 -->
+  <div class="cover-left">
+    <div class="deco-circle d1"></div>
+    <div class="deco-circle d2"></div>
+    <div class="deco-circle d3"></div>
+
+    <!-- Logo -->
+    <div class="logo-row">
+      <div class="logo-icon"><i class="fa-solid fa-house-chimney-heart"></i></div>
+      <div>
+        <div class="logo-text">好厝邊</div>
+        <div class="logo-sub">社區互助媒合平台</div>
+      </div>
+    </div>
+
+    <!-- 主標語 -->
+    <div class="hero">
+      <div class="hero-tag"><i class="fa-solid fa-heart" style="margin-right:6px;"></i>連結資源・傳遞溫暖</div>
+      <h1>讓閒置資源<br>找到<span>需要的人</span></h1>
+      <p>串連社區鄰里，將物資、志願服務與需求精準媒合，讓每一份善意都不浪費。</p>
+    </div>
+
+    <!-- 數據 -->
+    <div class="stat-row">
+      <div class="stat-item">
+        <div class="stat-num">500+</div>
+        <div class="stat-lbl">物資媒合</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">120+</div>
+        <div class="stat-lbl">志願服務</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">300+</div>
+        <div class="stat-lbl">受惠鄰里</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 右側 -->
+  <div class="cover-right">
+    <div>
+      <div class="right-title">核心功能</div>
+      <div class="feature-list">
+        <div class="feature-item highlight">
+          <div class="fi-icon green"><i class="fa-solid fa-box-open"></i></div>
+          <div class="fi-text">
+            <div class="fi-name">物資媒合</div>
+            <div class="fi-desc">捐贈閒置物品，讓好物再流通</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon yellow"><i class="fa-solid fa-hands-holding-circle"></i></div>
+          <div class="fi-text">
+            <div class="fi-name">志願服務</div>
+            <div class="fi-desc">送餐、陪伴、交通接送一站報名</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon light"><i class="fa-solid fa-clipboard-list"></i></div>
+          <div class="fi-text">
+            <div class="fi-name">需求登記</div>
+            <div class="fi-desc">長者與弱勢家庭快速提出需求</div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="fi-icon cream"><i class="fa-solid fa-map-location-dot"></i></div>
+          <div class="fi-text">
+            <div class="fi-name">社區地圖</div>
+            <div class="fi-desc">查看附近物資點與服務據點</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-tagline">
+      <div class="tagline-text">
+        專為<strong>獨居長者</strong>與<strong>低收入家庭</strong>設計<br>
+        大字體・簡潔介面・零門檻使用
+      </div>
+      <div class="qr-placeholder">
+        <i class="fa-solid fa-house-chimney-heart"></i>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
