@@ -59,7 +59,6 @@ app.include_router(elders.router)
 app.include_router(service_requests.router)
 app.include_router(gov_announcements.router)
 
-
 @app.get("/health")
 def health():
     return {"status": "ok"}
