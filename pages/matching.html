@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>志工媒合 — 社區關懷平台</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <nav class="bg-white border-b border-gray-200 shadow-sm">
+    <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="../index.html" class="text-lg font-bold text-blue-600">🏘️ 社區關懷平台</a>
+      <div class="flex gap-5 text-sm text-gray-600">
+        <a href="needs.html" class="nav-link hover:text-blue-600">需求登記</a>
+        <a href="matching.html" class="nav-link active">志工媒合</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-3xl mx-auto px-4 py-10">
+    <h1 class="text-2xl font-bold text-gray-800 mb-1">志工媒合</h1>
+    <p class="text-sm text-gray-500 mb-10">請選擇您的身份，完成登記後系統將為您尋找最適合的配對。</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+
+      <!-- 長者端 -->
+      <a href="elder-register.html"
+         class="card-hover bg-white rounded-2xl border border-gray-200 p-8 text-left block transition">
+        <div class="text-4xl mb-4">👴</div>
+        <h2 class="text-xl font-bold text-gray-800 mb-2">我是長者／需要幫助</h2>
+        <p class="text-gray-500 text-sm leading-relaxed">登記您需要的陪伴或協助類型，以及方便的時段，我們為您找到合適的志工。</p>
+        <div class="mt-4 text-blue-600 text-sm font-medium">前往登記 →</div>
+      </a>
+
+      <!-- 志工端 -->
+      <a href="volunteer-register.html"
+         class="card-hover bg-white rounded-2xl border border-gray-200 p-8 text-left block transition">
+        <div class="text-4xl mb-4">🙋</div>
+        <h2 class="text-xl font-bold text-gray-800 mb-2">我是志工／想要幫助</h2>
+        <p class="text-gray-500 text-sm leading-relaxed">填寫您可提供的服務項目與時段，通過身份認證後即可與長者配對。</p>
+        <div class="mt-4 text-blue-600 text-sm font-medium">前往登記 →</div>
+      </a>
+
+    </div>
+
+    <!-- 查看配對結果 -->
+    <div class="text-center">
+      <a href="match-result.html"
+         class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl px-8 py-3 text-sm transition">
+        🔍 查看目前配對結果
+      </a>
+    </div>
+  </main>
+
+</body>
+</html>
