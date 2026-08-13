@@ -14,10 +14,11 @@ const anonymousIdEl   = document.getElementById('anonymousId');
 needTypeEl.addEventListener('change', () => {
   if (needTypeEl.value === '生活物資') {
     supplySectionEl.classList.remove('hidden');
-    supplyCatEl.setAttribute('required', 'required');
+    supplyCatEl.disabled = false;
   } else {
     supplySectionEl.classList.add('hidden');
-    supplyCatEl.removeAttribute('required');
+    supplyCatEl.disabled = true;
+    supplyCatEl.value = '';   // 切換類型時重置，避免殘值
   }
 });
 
@@ -70,9 +71,16 @@ form.addEventListener('submit', (e) => {
   document.getElementById('chatEntryLink').href = `chat.html?room=${encodeURIComponent(chatCode)}`;
   successModal.classList.remove('hidden');
 
-  // 重置表單
-  form.reset();
+  // 重置表單（手動 reset 避免觸發 change 事件殘留 required）
+  needTypeEl.value   = '';
+  needDescEl.value   = '';
+  needContactEl.value = '';
   supplySectionEl.classList.add('hidden');
+  supplyCatEl.value   = '';
+  supplyCatEl.disabled = true;
+  supplyQtyEl.value   = '';
+  const urgencyDefault = document.querySelector('input[name="urgency"][value="一般"]');
+  if (urgencyDefault) urgencyDefault.checked = true;
 });
 
 function closeModal() {
