@@ -20,7 +20,9 @@ export default function DemandPage() {
   const handleSubmit = async (e) => {
     e.preventDefault(); setLoading(true); setError('')
     try {
-      const pos = await getLocation()
+      // 定位失敗時使用台北市中心作為預設座標
+      let pos = { lat: 25.0330, lng: 121.5654 }
+      try { pos = await getLocation() } catch (_) {}
       await api.post('/demands/', { ...form, location_lat: pos.lat, location_lng: pos.lng, location_display: form.location_display || '附近區域' })
       navigate('/')
     } catch (err) {

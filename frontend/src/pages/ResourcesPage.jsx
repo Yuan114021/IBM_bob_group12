@@ -18,15 +18,17 @@ export default function ResourcesPage() {
       pos => setUserPos({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
       () => {}
     )
+    // 無論定位成否，初次都先載入全部資料
+    fetchResources(category, keyword, null)
   }, [])
 
-  const fetchResources = async (cat, kw) => {
+  const fetchResources = async (cat, kw, pos) => {
     setLoading(true)
     try {
       const params = {}
       if (kw) params.keyword = kw
       if (cat !== '全部') params.category = cat
-      if (userPos) { params.lat = userPos.lat; params.lng = userPos.lng }
+      if (pos) { params.lat = pos.lat; params.lng = pos.lng }
       const res = await api.get('/resources/', { params })
       setResources(res.data)
     } finally {
@@ -34,9 +36,11 @@ export default function ResourcesPage() {
     }
   }
 
-  useEffect(() => { fetchResources(category, keyword) }, [category, userPos])
+  useEffect(() => {
+    if (userPos) fetchResources(category, keyword, userPos)
+  }, [category, userPos])
 
-  const handleSearch = e => { e.preventDefault(); fetchResources(category, keyword) }
+  const handleSearch = e => { e.preventDefault(); fetchResources(category, keyword, userPos) }
 
   return (
     <div className="page-content" style={{ background: 'var(--bg)' }}>

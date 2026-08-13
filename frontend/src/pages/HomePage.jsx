@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import api from '../api'
@@ -7,6 +7,7 @@ export default function HomePage() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const [stats, setStats] = useState({ resources: 0, demands: 0 })
+  const [openAnnouncement, setOpenAnnouncement] = useState(null)
 
   useEffect(() => {
     Promise.all([
@@ -85,24 +86,39 @@ export default function HomePage() {
         {[
           { title: '食品分享安全提醒', date: '2025/07/10', tag: '置頂', body: '食品類物資請確實標示有效期限，領取者請自行評估食用安全。' },
           { title: '新功能：需求媒合上線', date: '2025/07/08', tag: null, body: '發布物資時，系統將自動比對附近未滿足的需求，方便直接聯繫。' },
-        ].map(a => (
-          <div key={a.title} style={{
-            background: 'var(--surface)',
-            borderRadius: 'var(--r-md)',
-            border: '1px solid var(--border)',
-            padding: '12px 14px',
-            borderLeft: '4px solid var(--primary)',
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-              <div style={{ fontSize: 16, fontWeight: 700 }}>{a.title}</div>
-              {a.tag && <span className="tag tag-yellow">{a.tag}</span>}
+        ].map(a => {
+          const isOpen = openAnnouncement === a.title
+          return (
+            <div key={a.title}
+              onClick={() => setOpenAnnouncement(isOpen ? null : a.title)}
+              style={{
+                background: 'var(--surface)',
+                borderRadius: 'var(--r-md)',
+                border: '1px solid var(--border)',
+                padding: '12px 14px',
+                borderLeft: '4px solid var(--primary)',
+                cursor: 'pointer',
+                userSelect: 'none',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                <div style={{ fontSize: 16, fontWeight: 700 }}>{a.title}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  {a.tag && <span className="tag tag-yellow">{a.tag}</span>}
+                  <i className={`fa-solid fa-chevron-${isOpen ? 'up' : 'down'}`} style={{ fontSize: 13, color: 'var(--text-sub)' }}></i>
+                </div>
+              </div>
+              <div style={{ fontSize: 13, color: 'var(--text-sub)', marginBottom: isOpen ? 8 : 0 }}>
+                <i className="fa-regular fa-calendar" style={{ marginRight: 3 }}></i>{a.date}
+              </div>
+              {isOpen && (
+                <div style={{ fontSize: 14, color: '#555', lineHeight: 1.65, borderTop: '1px solid var(--border)', paddingTop: 8, marginTop: 4 }}>
+                  {a.body}
+                </div>
+              )}
             </div>
-            <div style={{ fontSize: 13, color: 'var(--text-sub)', marginBottom: 5 }}>
-              <i className="fa-regular fa-calendar" style={{ marginRight: 3 }}></i>{a.date}
-            </div>
-            <div style={{ fontSize: 14, color: '#555', lineHeight: 1.55 }}>{a.body}</div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )
