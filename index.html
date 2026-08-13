@@ -3,95 +3,992 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>社區關懷平台</title>
+  <title>好厝邊 — 社區關懷平台</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="css/style.css" />
   <script src="js/utils.js"></script>
   <script>document.addEventListener('DOMContentLoaded', applyGlobalFontSize);</script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary:       #2D6A4F;
+      --primary-dark:  #1B4332;
+      --primary-light: #D8F3DC;
+      --accent:        #F7C948;
+      --accent-light:  #FFF9E0;
+      --bg:            #F8F5EE;
+      --surface:       #FFFFFF;
+      --border:        #DDD7CC;
+      --text:          #2A2A2A;
+      --text-sub:      #6A6460;
+      --r-md: 12px; --r-lg: 20px;
+      --shadow: 0 2px 10px rgba(0,0,0,0.07);
+    }
+    body { font-family: "Noto Sans TC","Microsoft JhengHei",sans-serif; background: #ccc8be; color: var(--text); padding: 24px 16px 40px; }
+
+    /* ── 頁籤 ── */
+    .tab-nav { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:24px; }
+    .tab-btn { padding:9px 16px; border-radius:22px; font-size:14px; font-weight:600; border:2px solid var(--border); background:var(--surface); color:var(--text-sub); cursor:pointer; transition:all .15s; }
+    .tab-btn.active { background:var(--primary); border-color:var(--primary); color:#fff; }
+
+    /* ── 手機框 ── */
+    h1.page-title { text-align:center; font-size:24px; font-weight:800; margin-bottom:6px; color:var(--primary-dark); }
+    .page-sub { text-align:center; font-size:15px; color:var(--text-sub); margin-bottom:24px; }
+    .phone-wrap { display:flex; justify-content:center; }
+    .phone { width:390px; min-height:780px; background:var(--bg); border-radius:36px; overflow:hidden; box-shadow:0 12px 48px rgba(0,0,0,0.26); display:flex; flex-direction:column; border:3px solid #1a1a1a; }
+    .screen { display:none; flex-direction:column; flex:1; }
+    .screen.active { display:flex; }
+
+    /* ── Header ── */
+    .app-header { height:56px; background:var(--surface); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0; position:relative; }
+    .app-header h2 { font-size:18px; font-weight:700; color:var(--primary-dark); }
+    .app-header h2 i { margin-right:8px; color:var(--primary); }
+    .header-back { position:absolute; left:14px; font-size:15px; color:var(--primary); cursor:pointer; font-weight:600; }
+
+    /* ── 滾動區 ── */
+    .scroll-area { flex:1; overflow-y:auto; padding-bottom:72px; background:var(--bg); }
+    .scroll-area::-webkit-scrollbar { width:4px; }
+    .scroll-area::-webkit-scrollbar-thumb { background:#ccc5b8; border-radius:4px; }
+
+    /* ── 底部導覽 ── */
+    .bottom-nav { position:sticky; bottom:0; height:64px; background:var(--surface); border-top:1px solid var(--border); display:flex; flex-shrink:0; z-index:50; }
+    .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; cursor:pointer; color:var(--text-sub); font-size:11px; font-weight:600; padding:6px 0; transition:color .15s; }
+    .nav-item.active { color:var(--primary); }
+    .nav-item i { font-size:20px; }
+
+    /* ── 共用元件 ── */
+    .section-label { font-size:17px; font-weight:700; padding:16px 16px 10px; color:var(--text); }
+    .section-label i { color:var(--primary); margin-right:6px; }
+    .tag { display:inline-block; font-size:12px; font-weight:700; padding:3px 9px; border-radius:7px; }
+    .tag-yellow { background:var(--accent-light); color:#7a5c00; }
+    .tag-green  { background:var(--primary-light); color:#1B4332; }
+    .tag-gray   { background:#eee; color:#555; }
+    .tag-red    { background:#fff0f0; color:#c0392b; }
+    .tag-blue   { background:#eff6ff; color:#1d4ed8; }
+    .tag-purple { background:#fdf4ff; color:#7c3aed; }
+    .btn { display:block; width:100%; height:52px; border-radius:var(--r-lg); font-size:16px; font-weight:700; border:none; cursor:pointer; text-align:center; line-height:52px; transition:opacity .15s; }
+    .btn:active { opacity:.8; }
+    .btn-primary { background:var(--primary); color:#fff; }
+    .btn-outline { background:transparent; border:2px solid var(--primary); color:var(--primary); line-height:48px; }
+    .btn-sm { display:inline-block; height:36px; padding:0 14px; border-radius:14px; font-size:13px; font-weight:700; border:none; cursor:pointer; line-height:36px; }
+    .filter-bar { display:flex; gap:8px; padding:10px 16px; overflow-x:auto; background:var(--surface); border-bottom:1px solid var(--border); }
+    .filter-bar::-webkit-scrollbar { display:none; }
+    .chip { flex-shrink:0; padding:6px 14px; border-radius:18px; font-size:13px; font-weight:600; border:1.5px solid var(--border); background:var(--surface); color:var(--text-sub); white-space:nowrap; cursor:pointer; }
+    .chip.active { background:var(--primary); border-color:var(--primary); color:#fff; }
+    .form-group { display:flex; flex-direction:column; gap:6px; margin-bottom:14px; }
+    .form-label { font-size:15px; font-weight:700; }
+    .form-input,.form-select,.form-textarea { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-md); font-size:15px; font-family:inherit; color:var(--text); padding:11px 14px; width:100%; outline:none; }
+    .form-input:focus,.form-select:focus,.form-textarea:focus { border-color:var(--primary); border-width:2px; }
+    .form-textarea { height:76px; resize:none; line-height:1.6; }
+
+    /* ── 首頁 ── */
+    .home-banner { background:var(--primary); margin:14px 16px; border-radius:var(--r-md); padding:20px 18px; color:#fff; }
+    .home-banner .greet { font-size:14px; opacity:.85; margin-bottom:4px; }
+    .home-banner .title { font-size:21px; font-weight:800; margin-bottom:5px; }
+    .home-banner .sub   { font-size:13px; opacity:.8; }
+    .home-banner .sub i { color:var(--accent); margin-right:4px; }
+    .quick-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:0 16px; }
+    .quick-card { background:var(--surface); border-radius:var(--r-md); border:1px solid var(--border); box-shadow:var(--shadow); padding:16px 12px 14px; display:flex; flex-direction:column; align-items:center; gap:8px; cursor:pointer; transition:box-shadow .15s; }
+    .quick-card:active { box-shadow:0 1px 4px rgba(0,0,0,.08); }
+    .quick-card .q-icon { width:46px; height:46px; border-radius:14px; background:var(--primary-light); display:flex; align-items:center; justify-content:center; }
+    .quick-card .q-icon i { font-size:20px; color:var(--primary); }
+    .quick-card .q-name { font-size:15px; font-weight:700; }
+    .quick-card .q-count { font-size:12px; color:var(--text-sub); }
+    .announce-list { padding:0 16px; display:flex; flex-direction:column; gap:10px; }
+    .ann-card { background:var(--surface); border-radius:var(--r-md); border:1px solid var(--border); padding:12px 14px; border-left:4px solid var(--primary); }
+    .ann-card .an-title { font-size:15px; font-weight:700; margin-bottom:4px; }
+    .ann-card .an-meta  { font-size:12px; color:var(--text-sub); margin-bottom:4px; }
+    .ann-card .an-body  { font-size:13px; color:#555; line-height:1.55; }
+
+    /* ── 物資 ── */
+    .goods-list { padding:12px 16px; display:flex; flex-direction:column; gap:12px; }
+    .goods-card { background:var(--surface); border-radius:var(--r-md); border:1px solid var(--border); box-shadow:var(--shadow); overflow:hidden; }
+    .goods-card .gc-top { padding:14px 14px 10px; }
+    .goods-card .gc-name { font-size:16px; font-weight:700; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
+    .goods-card .gc-meta { font-size:13px; color:var(--text-sub); line-height:1.9; }
+    .goods-card .gc-meta i { color:var(--primary); margin-right:4px; width:14px; }
+    .goods-card .gc-actions { border-top:1px solid var(--border); display:flex; }
+    .goods-card .gc-btn { flex:1; height:42px; font-size:14px; font-weight:700; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; }
+    .goods-card .gc-btn.primary { color:var(--primary); border-right:1px solid var(--border); }
+    .goods-card .gc-btn.chat    { color:#1d4ed8; }
+
+    /* ── 志工 ── */
+    .vol-list { padding:12px 16px; display:flex; flex-direction:column; gap:12px; }
+    .vol-card { background:var(--surface); border-radius:var(--r-md); border:1px solid var(--border); box-shadow:var(--shadow); padding:14px; }
+    .vol-card .vc-head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
+    .vol-card .vc-name { font-size:16px; font-weight:700; }
+    .vol-card .vc-meta { font-size:13px; color:var(--text-sub); line-height:1.9; margin-bottom:10px; }
+    .vol-card .vc-meta i { color:var(--primary); margin-right:4px; width:13px; }
+    .vol-card .vc-footer { display:flex; gap:8px; align-items:center; }
+    .vol-card .vc-quota { font-size:13px; color:var(--text-sub); flex:1; }
+    .vol-card .vc-quota span { font-weight:700; color:var(--primary); }
+    .badge-vol  { display:inline-flex; align-items:center; gap:3px; background:#fdf4ff; color:#7c3aed; border:1px solid #e9d5ff; border-radius:9999px; padding:2px 8px; font-size:11px; font-weight:700; }
+    .badge-nbr  { display:inline-flex; align-items:center; gap:3px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; border-radius:9999px; padding:2px 8px; font-size:11px; font-weight:700; }
+
+    /* ── 需求登記 ── */
+    .req-form { padding:4px 16px 16px; }
+    .supply-section { display:none; background:#eff6ff; border:1px solid #bfdbfe; border-radius:var(--r-md); padding:14px; margin-bottom:14px; }
+    .supply-section.show { display:block; }
+    .req-past { padding:0 16px 16px; display:flex; flex-direction:column; gap:10px; }
+    .req-card { background:var(--surface); border-radius:var(--r-md); border:1px solid var(--border); padding:12px 14px; display:flex; justify-content:space-between; align-items:center; }
+    .req-card .rc-title { font-size:15px; font-weight:700; }
+    .req-card .rc-meta  { font-size:12px; color:var(--text-sub); margin-top:3px; }
+
+    /* ── 聊天室 ── */
+    .chat-entry { padding:16px; display:flex; flex-direction:column; gap:14px; }
+    .chat-history { padding:12px 16px; display:flex; flex-direction:column; gap:10px; }
+    .chat-row { background:var(--surface); border-radius:var(--r-md); border:1px solid var(--border); padding:12px 14px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
+    .chat-room-view { flex:1; display:flex; flex-direction:column; min-height:0; }
+    .msg-list { flex:1; overflow-y:auto; padding:12px 14px; display:flex; flex-direction:column; gap:10px; background:var(--bg); }
+    .msg-me    { align-self:flex-end; background:#dbeafe; border-radius:16px 16px 4px 16px; padding:9px 13px; max-width:75%; font-size:14px; }
+    .msg-other { align-self:flex-start; background:#f3f4f6; border-radius:16px 16px 16px 4px; padding:9px 13px; max-width:75%; font-size:14px; }
+    .msg-sys   { align-self:center; background:#fefce8; border-radius:8px; padding:3px 12px; font-size:12px; color:#854d0e; }
+    .msg-input-bar { display:flex; gap:8px; padding:10px 12px; background:var(--surface); border-top:1px solid var(--border); flex-shrink:0; }
+    .msg-input-bar input { flex:1; border:1.5px solid var(--border); border-radius:20px; padding:8px 14px; font-size:14px; font-family:inherit; outline:none; }
+    .msg-input-bar input:focus { border-color:var(--primary); }
+    .msg-send-btn { background:var(--primary); color:#fff; border:none; border-radius:50%; width:38px; height:38px; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+
+    /* ── 地圖 ── */
+    .map-box { position:relative; width:100%; height:295px; overflow:hidden; }
+    .map-svg  { width:100%; height:100%; }
+    .map-pin  { position:absolute; display:flex; flex-direction:column; align-items:center; transform:translate(-50%,-100%); }
+    .map-pin .bubble { background:var(--surface); border:2px solid; border-radius:9px; padding:4px 9px; font-size:12px; font-weight:700; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,.16); position:relative; display:flex; align-items:center; gap:4px; }
+    .map-pin .bubble::after { content:''; position:absolute; bottom:-7px; left:50%; transform:translateX(-50%); border:4px solid transparent; }
+    .map-pin .dot { width:10px; height:10px; border-radius:50%; border:2px solid #fff; margin-top:2px; }
+    .map-pin.g .bubble { border-color:var(--primary); } .map-pin.g .bubble::after { border-top-color:var(--primary); } .map-pin.g .dot { background:var(--primary); } .map-pin.g .bubble i { color:var(--primary); }
+    .map-pin.v .bubble { border-color:var(--accent); }  .map-pin.v .bubble::after { border-top-color:var(--accent); }  .map-pin.v .dot { background:var(--accent); }  .map-pin.v .bubble i { color:#a07800; }
+    .my-loc { position:absolute; width:14px; height:14px; background:#1976D2; border-radius:50%; border:3px solid #fff; box-shadow:0 0 0 5px rgba(25,118,210,.2); transform:translate(-50%,-50%); }
+    .map-legend { position:absolute; top:10px; left:10px; background:rgba(255,255,255,.94); border-radius:9px; padding:7px 11px; font-size:12px; line-height:2; }
+    .ldot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:4px; vertical-align:middle; }
+    .nearby-list { padding:8px 16px; display:flex; flex-direction:column; gap:10px; }
+    .nearby-card { background:var(--surface); border-radius:var(--r-md); border:1px solid var(--border); padding:12px 14px; display:flex; gap:12px; align-items:center; }
+    .ni-icon { width:42px; height:42px; display:flex; align-items:center; justify-content:center; border-radius:10px; flex-shrink:0; }
+    .ni-icon i { font-size:18px; }
+    .ni-icon.g { background:var(--primary-light); } .ni-icon.g i { color:var(--primary); }
+    .ni-icon.v { background:var(--accent-light); }  .ni-icon.v i { color:#a07800; }
+    .ni-info { flex:1; } .ni-name { font-size:15px; font-weight:700; } .ni-meta { font-size:12px; color:var(--text-sub); margin-top:2px; }
+    .ni-dist { font-size:14px; font-weight:700; color:var(--primary); flex-shrink:0; }
+
+    /* ── 個人 ── */
+    .profile-header { background:var(--primary); padding:24px 20px 20px; display:flex; align-items:center; gap:16px; }
+    .avatar { width:64px; height:64px; border-radius:50%; background:var(--accent-light); border:3px solid var(--accent); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .avatar i { font-size:28px; color:var(--primary); }
+    .pf-name { font-size:20px; font-weight:800; color:#fff; }
+    .pf-sub  { font-size:13px; color:rgba(255,255,255,.8); margin-top:3px; display:flex; align-items:center; gap:5px; }
+    .stat-row { display:flex; background:var(--surface); border-bottom:1px solid var(--border); }
+    .stat-item { flex:1; padding:13px 0; text-align:center; }
+    .stat-item:not(:last-child) { border-right:1px solid var(--border); }
+    .stat-num { font-size:20px; font-weight:800; color:var(--primary); }
+    .stat-lbl { font-size:11px; color:var(--text-sub); margin-top:2px; }
+    .settings-list { padding:12px 16px; display:flex; flex-direction:column; }
+    .setting-item { background:var(--surface); padding:14px 14px; display:flex; align-items:center; gap:12px; font-size:15px; font-weight:600; border-bottom:1px solid var(--border); cursor:pointer; }
+    .setting-item:first-child { border-radius:var(--r-md) var(--r-md) 0 0; }
+    .setting-item:last-child  { border-radius:0 0 var(--r-md) var(--r-md); border-bottom:none; }
+    .setting-item i.s-icon { font-size:17px; color:var(--primary); width:20px; }
+    .setting-item .s-arrow { margin-left:auto; color:var(--border); }
+
+    /* ── 驗證 ── */
+    .verify-step { display:none; } .verify-step.show { display:block; }
+    .step-dot { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; flex-shrink:0; }
+    .code-display { font-size:24px; font-weight:800; letter-spacing:.4em; color:var(--primary); background:var(--primary-light); border-radius:12px; padding:12px; text-align:center; }
+
+    /* ── Modal ── */
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center; z-index:100; }
+    .modal-box { background:#fff; border-radius:20px; padding:28px; max-width:320px; width:90%; text-align:center; box-shadow:0 8px 32px rgba(0,0,0,.2); }
+  </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body>
 
-  <!-- 導覽列 -->
-  <nav class="bg-white border-b border-gray-200 shadow-sm">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-      <a href="index.html" class="text-xl font-bold text-blue-600 tracking-wide">🏘️ 社區關懷平台</a>
-      <div class="flex gap-6 text-sm text-gray-600">
-        <a href="pages/needs.html" class="nav-link hover:text-blue-600 transition">需求登記</a>
-        <a href="pages/matching.html" class="nav-link hover:text-blue-600 transition">志工媒合</a>
-        <a href="pages/needs-admin.html" class="nav-link hover:text-blue-600 transition text-gray-400">管理員</a>
+<h1 class="page-title">🌱 好厝邊</h1>
+<p class="page-sub">社區互助平台 — 點選頁籤切換功能</p>
+
+<div class="tab-nav">
+  <button class="tab-btn active"  onclick="show('home',this)"><i class="fa-solid fa-house"></i> 首頁</button>
+  <button class="tab-btn"         onclick="show('goods',this)"><i class="fa-solid fa-box-open"></i> 物資</button>
+  <button class="tab-btn"         onclick="show('volunteer',this)"><i class="fa-solid fa-hands-holding-circle"></i> 志工</button>
+  <button class="tab-btn"         onclick="show('request',this)"><i class="fa-solid fa-clipboard-list"></i> 需求</button>
+  <button class="tab-btn"         onclick="show('chat',this)"><i class="fa-solid fa-comments"></i> 聊天</button>
+  <button class="tab-btn"         onclick="show('map',this)"><i class="fa-solid fa-map-location-dot"></i> 地圖</button>
+  <button class="tab-btn"         onclick="show('profile',this)"><i class="fa-solid fa-user"></i> 我的</button>
+</div>
+
+<div class="phone-wrap"><div class="phone">
+
+  <!-- ══ 首頁 ══ -->
+  <div class="screen active" id="s-home">
+    <div class="app-header"><h2><i class="fa-solid fa-seedling"></i>好厝邊</h2></div>
+    <div class="scroll-area">
+      <div class="home-banner">
+        <div class="greet" id="bannerGreet">歡迎回來</div>
+        <div class="title">讓關懷不缺席</div>
+        <div class="sub"><i class="fa-solid fa-circle-info"></i>連結社區長者與志工，共創互助社區</div>
+      </div>
+      <div class="section-label"><i class="fa-solid fa-grip"></i>快速入口</div>
+      <div class="quick-grid">
+        <div class="quick-card" onclick="show('goods',document.querySelectorAll('.tab-btn')[1])">
+          <div class="q-icon"><i class="fa-solid fa-box-open"></i></div>
+          <div class="q-name">物資媒合</div><div class="q-count" id="qGoodsCount">讀取中…</div>
+        </div>
+        <div class="quick-card" onclick="show('volunteer',document.querySelectorAll('.tab-btn')[2])">
+          <div class="q-icon"><i class="fa-solid fa-hands-holding-circle"></i></div>
+          <div class="q-name">志工媒合</div><div class="q-count" id="qVolCount">讀取中…</div>
+        </div>
+        <div class="quick-card" onclick="show('request',document.querySelectorAll('.tab-btn')[3])">
+          <div class="q-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+          <div class="q-name">需求登記</div><div class="q-count">匿名安全</div>
+        </div>
+        <div class="quick-card" onclick="show('chat',document.querySelectorAll('.tab-btn')[4])">
+          <div class="q-icon"><i class="fa-solid fa-comments"></i></div>
+          <div class="q-name">匿名聊天</div><div class="q-count">免留個資</div>
+        </div>
+      </div>
+      <div class="section-label"><i class="fa-solid fa-bullhorn"></i>社區公告</div>
+      <div class="announce-list">
+        <div class="ann-card">
+          <div class="an-title">本週六開放換季物資領取</div>
+          <div class="an-meta"><i class="fa-regular fa-calendar"></i>2025/08/10 &nbsp;<span class="tag tag-yellow">新</span></div>
+          <div class="an-body">地點：社區活動中心，早上 9 點至 12 點，請攜帶身分證。</div>
+        </div>
+        <div class="ann-card">
+          <div class="an-title">長者送餐志工招募中</div>
+          <div class="an-meta"><i class="fa-regular fa-calendar"></i>2025/08/08</div>
+          <div class="an-body">每週二、四上午，協助送餐至獨居長者家中，歡迎報名！</div>
+        </div>
+        <div class="ann-card">
+          <div class="an-title">社區清潔活動通知</div>
+          <div class="an-meta"><i class="fa-regular fa-calendar"></i>2025/08/05</div>
+          <div class="an-body">8/20 週日早上 8 點，一起美化社區環境，歡迎大小朋友參加。</div>
+        </div>
       </div>
     </div>
-  </nav>
+    <nav class="bottom-nav">
+      <div class="nav-item active" onclick="show('home',document.querySelectorAll('.tab-btn')[0])"><i class="fa-solid fa-house"></i>首頁</div>
+      <div class="nav-item" onclick="show('goods',document.querySelectorAll('.tab-btn')[1])"><i class="fa-solid fa-box-open"></i>物資</div>
+      <div class="nav-item" onclick="show('map',document.querySelectorAll('.tab-btn')[5])"><i class="fa-solid fa-map-location-dot"></i>地圖</div>
+      <div class="nav-item" onclick="show('chat',document.querySelectorAll('.tab-btn')[4])"><i class="fa-solid fa-comments"></i>聊天</div>
+      <div class="nav-item" onclick="show('profile',document.querySelectorAll('.tab-btn')[6])"><i class="fa-solid fa-user"></i>我的</div>
+    </nav>
+  </div>
 
-  <!-- Hero -->
-  <section class="max-w-4xl mx-auto px-4 pt-16 pb-10 text-center">
-    <h1 class="text-4xl font-bold text-gray-800 mb-4">讓關懷不缺席</h1>
-    <p class="text-lg text-gray-500 mb-10">連結社區長者與志工，讓每一份需求都能被看見、被幫助。</p>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-
-      <!-- 需求登記 -->
-      <a href="pages/needs.html"
-         class="card-hover bg-white rounded-2xl border border-gray-200 p-8 text-left block transition">
-        <div class="text-4xl mb-4">📋</div>
-        <h2 class="text-xl font-bold text-gray-800 mb-2">需求登記</h2>
-        <p class="text-gray-500 text-sm leading-relaxed">
-          居民可匿名登記生活物資、就醫陪同、日常陪伴等需求。<br/>
-          系統自動產生匿名代號，保護您的隱私。
-        </p>
-        <div class="mt-4 text-blue-600 text-sm font-medium">前往登記 →</div>
-      </a>
-
-      <!-- 志工媒合 -->
-      <a href="pages/matching.html"
-         class="card-hover bg-white rounded-2xl border border-gray-200 p-8 text-left block transition">
-        <div class="text-4xl mb-4">🤝</div>
-        <h2 class="text-xl font-bold text-gray-800 mb-2">志工媒合</h2>
-        <p class="text-gray-500 text-sm leading-relaxed">
-          長者登記陪伴需求，志工登記可服務時段與項目。<br/>
-          平台自動為雙方找到最適合的配對。
-        </p>
-        <div class="mt-4 text-blue-600 text-sm font-medium">前往媒合 →</div>
-      </a>
-
-      <!-- 匿名聊天室 -->
-      <a href="pages/chat.html"
-         class="card-hover bg-white rounded-2xl border border-gray-200 p-8 text-left block transition md:col-span-2">
-        <div class="text-4xl mb-4">💬</div>
-        <h2 class="text-xl font-bold text-gray-800 mb-2">匿名聊天室</h2>
-        <p class="text-gray-500 text-sm leading-relaxed">
-          以代號溝通，保護個資。敲定面交時間、地點或志工站點，確認後再決定是否交換聯絡方式。
-        </p>
-        <div class="mt-4 text-blue-600 text-sm font-medium">前往聊天 →</div>
-      </a>
-
+  <!-- ══ 物資媒合 ══ -->
+  <div class="screen" id="s-goods">
+    <div class="app-header"><h2><i class="fa-solid fa-box-open"></i>物資媒合</h2></div>
+    <div class="filter-bar">
+      <div class="chip active" onclick="filterGoods('全部',this)">全部</div>
+      <div class="chip" onclick="filterGoods('衣物',this)"><i class="fa-solid fa-shirt"></i> 衣物</div>
+      <div class="chip" onclick="filterGoods('食物/飲水',this)"><i class="fa-solid fa-bowl-rice"></i> 食物</div>
+      <div class="chip" onclick="filterGoods('日用品',this)"><i class="fa-solid fa-couch"></i> 日用品</div>
+      <div class="chip" onclick="filterGoods('藥品',this)"><i class="fa-solid fa-pills"></i> 藥品</div>
     </div>
-  </section>
-
-  <!-- 特色說明 -->
-  <section class="max-w-4xl mx-auto px-4 pb-16">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="bg-white rounded-xl border border-gray-100 p-5 text-center">
-        <div class="text-2xl mb-2">🔒</div>
-        <div class="font-semibold text-gray-700 text-sm">匿名保護</div>
-        <div class="text-xs text-gray-400 mt-1">需求登記全程匿名，避免標籤化</div>
-      </div>
-      <div class="bg-white rounded-xl border border-gray-100 p-5 text-center">
-        <div class="text-2xl mb-2">✅</div>
-        <div class="font-semibold text-gray-700 text-sm">審核機制</div>
-        <div class="text-xs text-gray-400 mt-1">經里長/志工審核，防範濫用</div>
-      </div>
-      <div class="bg-white rounded-xl border border-gray-100 p-5 text-center">
-        <div class="text-2xl mb-2">💞</div>
-        <div class="font-semibold text-gray-700 text-sm">雙向配對</div>
-        <div class="text-xs text-gray-400 mt-1">依時段與服務項目智慧媒合</div>
+    <div class="scroll-area">
+      <div id="goodsList" class="goods-list"></div>
+      <div style="padding:0 16px 8px;">
+        <button class="btn btn-outline" onclick="show('request',document.querySelectorAll('.tab-btn')[3])">
+          <i class="fa-solid fa-plus"></i> 登記物資需求
+        </button>
       </div>
     </div>
-  </section>
+    <nav class="bottom-nav">
+      <div class="nav-item" onclick="show('home',document.querySelectorAll('.tab-btn')[0])"><i class="fa-solid fa-house"></i>首頁</div>
+      <div class="nav-item active" onclick="show('goods',document.querySelectorAll('.tab-btn')[1])"><i class="fa-solid fa-box-open"></i>物資</div>
+      <div class="nav-item" onclick="show('map',document.querySelectorAll('.tab-btn')[5])"><i class="fa-solid fa-map-location-dot"></i>地圖</div>
+      <div class="nav-item" onclick="show('volunteer',document.querySelectorAll('.tab-btn')[2])"><i class="fa-solid fa-hands-holding-circle"></i>志工</div>
+      <div class="nav-item" onclick="show('profile',document.querySelectorAll('.tab-btn')[6])"><i class="fa-solid fa-user"></i>我的</div>
+    </nav>
+  </div>
 
-  <footer class="text-center text-xs text-gray-400 pb-6">
-    © 2025 社區關懷平台 · IBM Bob Group 12
-  </footer>
+  <!-- ══ 志工媒合 ══ -->
+  <div class="screen" id="s-volunteer">
+    <div class="app-header"><h2><i class="fa-solid fa-hands-holding-circle"></i>志工媒合</h2></div>
+    <div class="filter-bar">
+      <div class="chip active">全部</div>
+      <div class="chip"><i class="fa-solid fa-utensils"></i> 送餐</div>
+      <div class="chip"><i class="fa-solid fa-person-walking"></i> 陪伴</div>
+      <div class="chip"><i class="fa-solid fa-cart-shopping"></i> 代買</div>
+      <div class="chip"><i class="fa-solid fa-car"></i> 交通</div>
+    </div>
+    <div class="scroll-area">
+      <div class="section-label"><i class="fa-solid fa-list-check"></i>志工活動</div>
+      <div class="vol-list" id="volMatchList"></div>
+      <div style="padding:0 16px 8px;">
+        <button class="btn btn-outline" onclick="show('request',document.querySelectorAll('.tab-btn')[3]);setTimeout(()=>document.getElementById('reqTypeSelect').value='志工陪伴',100)">
+          <i class="fa-solid fa-plus"></i> 登記志工需求
+        </button>
+      </div>
+      <div class="section-label"><i class="fa-solid fa-user-plus"></i>成為志工</div>
+      <div style="padding:0 16px 16px;">
+        <button class="btn btn-primary" onclick="showVolRegModal()">
+          <i class="fa-solid fa-hand-holding-heart"></i> 志工登記
+        </button>
+      </div>
+    </div>
+    <nav class="bottom-nav">
+      <div class="nav-item" onclick="show('home',document.querySelectorAll('.tab-btn')[0])"><i class="fa-solid fa-house"></i>首頁</div>
+      <div class="nav-item" onclick="show('goods',document.querySelectorAll('.tab-btn')[1])"><i class="fa-solid fa-box-open"></i>物資</div>
+      <div class="nav-item" onclick="show('map',document.querySelectorAll('.tab-btn')[5])"><i class="fa-solid fa-map-location-dot"></i>地圖</div>
+      <div class="nav-item active" onclick="show('volunteer',document.querySelectorAll('.tab-btn')[2])"><i class="fa-solid fa-hands-holding-circle"></i>志工</div>
+      <div class="nav-item" onclick="show('profile',document.querySelectorAll('.tab-btn')[6])"><i class="fa-solid fa-user"></i>我的</div>
+    </nav>
+  </div>
 
+  <!-- ══ 需求登記 ══ -->
+  <div class="screen" id="s-request">
+    <div class="app-header"><h2><i class="fa-solid fa-clipboard-list"></i>需求登記</h2></div>
+    <div class="scroll-area">
+      <!-- 居民驗證狀態 -->
+      <div id="verifyBar" style="padding:10px 16px 0;"></div>
+
+      <div class="section-label"><i class="fa-solid fa-pen-to-square"></i>提出新需求</div>
+      <div class="req-form">
+        <div class="form-group">
+          <label class="form-label">需求類型 <span style="color:#c0392b">*</span></label>
+          <select id="reqTypeSelect" class="form-select" onchange="toggleSupply(this.value)">
+            <option value="">請選擇…</option>
+            <option value="生活物資">生活物資（食物、衣物等）</option>
+            <option value="志工陪伴">志工陪伴（聊天、散步等）</option>
+            <option value="就醫陪同">就醫陪同</option>
+            <option value="家務協助">家務協助</option>
+            <option value="其他">其他</option>
+          </select>
+        </div>
+
+        <!-- 物資細項 -->
+        <div class="supply-section" id="supplySection">
+          <div style="font-size:13px;font-weight:700;color:#1d4ed8;margin-bottom:10px;">📦 物資細項</div>
+          <div class="form-group">
+            <label class="form-label">物資類別</label>
+            <select id="supplyCat" class="form-select">
+              <option value="">請選擇…</option>
+              <option>食物/飲水</option><option>日用品</option>
+              <option>藥品</option><option>衣物</option><option>其他</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">數量／說明</label>
+            <input type="text" id="supplyQty" class="form-input" placeholder="例：白米 5 公斤" />
+          </div>
+          <div style="display:flex;gap:12px;align-items:center;">
+            <label style="font-size:14px;font-weight:700;">緊急程度：</label>
+            <label style="cursor:pointer;font-size:14px;"><input type="radio" name="urgency" value="一般" checked /> 一般</label>
+            <label style="cursor:pointer;font-size:14px;"><input type="radio" name="urgency" value="緊急" /> <span style="color:#c0392b;font-weight:700;">緊急</span></label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">詳細說明</label>
+          <textarea id="reqDesc" class="form-textarea" placeholder="請簡單描述您的需求（選填）"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">聯絡方式 <span style="font-size:12px;color:var(--text-sub);">（選填，僅審核人員可見）</span></label>
+          <input type="text" id="reqContact" class="form-input" placeholder="電話或其他聯絡方式" />
+        </div>
+        <button class="btn btn-primary" onclick="submitRequest()">
+          <i class="fa-solid fa-paper-plane"></i> 送出需求
+        </button>
+      </div>
+
+      <div class="section-label"><i class="fa-solid fa-clock-rotate-left"></i>我的需求紀錄</div>
+      <div class="req-past" id="myReqList">
+        <div style="text-align:center;color:var(--text-sub);font-size:14px;padding:16px 0;">尚無紀錄</div>
+      </div>
+    </div>
+    <nav class="bottom-nav">
+      <div class="nav-item" onclick="show('home',document.querySelectorAll('.tab-btn')[0])"><i class="fa-solid fa-house"></i>首頁</div>
+      <div class="nav-item" onclick="show('goods',document.querySelectorAll('.tab-btn')[1])"><i class="fa-solid fa-box-open"></i>物資</div>
+      <div class="nav-item" onclick="show('map',document.querySelectorAll('.tab-btn')[5])"><i class="fa-solid fa-map-location-dot"></i>地圖</div>
+      <div class="nav-item active"><i class="fa-solid fa-clipboard-list"></i>需求</div>
+      <div class="nav-item" onclick="show('profile',document.querySelectorAll('.tab-btn')[6])"><i class="fa-solid fa-user"></i>我的</div>
+    </nav>
+  </div>
+
+  <!-- ══ 匿名聊天 ══ -->
+  <div class="screen" id="s-chat">
+    <div class="app-header" id="chatHeader"><h2><i class="fa-solid fa-comments"></i>匿名聊天室</h2></div>
+    <!-- 進入聊天室 -->
+    <div id="chatEntryView" class="scroll-area">
+      <div class="chat-entry">
+        <div style="background:var(--primary-light);border-radius:12px;padding:14px 16px;font-size:13px;color:var(--primary-dark);">
+          <strong>💬 如何使用？</strong><br/>輸入需求代號（送出需求後系統提供），雙方進入同一聊天室，免留個資直接溝通。
+        </div>
+        <div class="form-group">
+          <label class="form-label">聊天室代號 <span style="color:#c0392b">*</span></label>
+          <input type="text" id="chatRoomInput" class="form-input" placeholder="例：愛心居民 #A382" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">我的身份</label>
+          <div style="display:flex;gap:12px;">
+            <label style="cursor:pointer;font-size:14px;display:flex;align-items:center;gap:6px;"><input type="radio" name="chatRole" value="居民" checked /> 🏠 居民</label>
+            <label style="cursor:pointer;font-size:14px;display:flex;align-items:center;gap:6px;"><input type="radio" name="chatRole" value="志工" /> 🙋 志工</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">暱稱（選填）</label>
+          <input type="text" id="chatNickname" class="form-input" placeholder="預設使用匿名代號" />
+        </div>
+        <button class="btn btn-primary" onclick="enterChatRoom()">
+          <i class="fa-solid fa-door-open"></i> 進入聊天室
+        </button>
+
+        <div class="section-label" style="padding:8px 0 8px;"><i class="fa-solid fa-history"></i>最近聊天</div>
+        <div id="chatHistoryList">
+          <div style="text-align:center;color:var(--text-sub);font-size:13px;padding:8px 0;">尚無聊天紀錄</div>
+        </div>
+      </div>
+    </div>
+    <!-- 聊天室主體 -->
+    <div id="chatRoomView" class="chat-room-view" style="display:none;">
+      <div class="msg-list" id="msgList"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 14px;background:var(--surface);border-top:1px solid var(--border);">
+        <span style="font-size:12px;color:var(--text-sub);" id="chatRoomLabel"></span>
+        <button onclick="shareContact()" style="font-size:12px;color:var(--primary);background:var(--primary-light);border:none;border-radius:8px;padding:4px 10px;cursor:pointer;font-weight:700;">📞 交換聯絡</button>
+      </div>
+      <div class="msg-input-bar">
+        <input type="text" id="msgInput" placeholder="輸入訊息… (Enter 送出)" onkeydown="if(event.key==='Enter')sendMsg()" />
+        <button class="msg-send-btn" onclick="sendMsg()"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
+    </div>
+    <nav class="bottom-nav">
+      <div class="nav-item" onclick="show('home',document.querySelectorAll('.tab-btn')[0])"><i class="fa-solid fa-house"></i>首頁</div>
+      <div class="nav-item" onclick="show('goods',document.querySelectorAll('.tab-btn')[1])"><i class="fa-solid fa-box-open"></i>物資</div>
+      <div class="nav-item" onclick="show('map',document.querySelectorAll('.tab-btn')[5])"><i class="fa-solid fa-map-location-dot"></i>地圖</div>
+      <div class="nav-item active"><i class="fa-solid fa-comments"></i>聊天</div>
+      <div class="nav-item" onclick="show('profile',document.querySelectorAll('.tab-btn')[6])"><i class="fa-solid fa-user"></i>我的</div>
+    </nav>
+  </div>
+
+  <!-- ══ 社區地圖 ══ -->
+  <div class="screen" id="s-map">
+    <div class="app-header"><h2><i class="fa-solid fa-map-location-dot"></i>社區地圖</h2></div>
+    <div class="filter-bar">
+      <div class="chip active">全部</div>
+      <div class="chip"><i class="fa-solid fa-box-open"></i> 物資點</div>
+      <div class="chip"><i class="fa-solid fa-hands-holding-circle"></i> 志工站</div>
+      <div class="chip"><i class="fa-solid fa-clipboard-list"></i> 需求點</div>
+    </div>
+    <div class="scroll-area">
+      <div class="map-box">
+        <svg class="map-svg" viewBox="0 0 390 295" xmlns="http://www.w3.org/2000/svg">
+          <rect width="390" height="295" fill="#E8F0E4"/>
+          <rect x="0" y="128" width="390" height="18" fill="#CFC9BE" opacity=".9"/>
+          <rect x="0" y="218" width="390" height="14" fill="#CFC9BE" opacity=".7"/>
+          <rect x="170" y="0" width="16" height="295" fill="#CFC9BE" opacity=".9"/>
+          <rect x="295" y="0" width="13" height="295" fill="#CFC9BE" opacity=".7"/>
+          <rect x="55" y="0" width="11" height="295" fill="#CFC9BE" opacity=".6"/>
+          <rect x="215" y="16" width="68" height="54" rx="7" fill="#A8D5A2" opacity=".9"/>
+          <text x="249" y="48" text-anchor="middle" font-size="11" fill="#2D6A4F" font-weight="700">公園</text>
+          <rect x="76" y="16" width="38" height="32" rx="4" fill="#C4BDB3" opacity=".6"/>
+          <rect x="122" y="16" width="34" height="32" rx="4" fill="#C4BDB3" opacity=".6"/>
+          <rect x="76" y="154" width="46" height="42" rx="4" fill="#C4BDB3" opacity=".6"/>
+          <rect x="214" y="153" width="40" height="36" rx="4" fill="#C4BDB3" opacity=".6"/>
+          <rect x="310" y="153" width="46" height="44" rx="4" fill="#C4BDB3" opacity=".6"/>
+          <text x="188" y="122" text-anchor="middle" font-size="11" fill="#7a7060" font-weight="500">中正路</text>
+          <text x="167" y="182" font-size="10" fill="#7a7060" font-weight="500" transform="rotate(-90,167,182)">仁愛街</text>
+        </svg>
+        <div class="map-pin g" style="left:108px;top:112px;"><div class="bubble"><i class="fa-solid fa-box-open"></i>衣物交換站</div><div class="dot"></div></div>
+        <div class="map-pin g" style="left:325px;top:94px;"><div class="bubble"><i class="fa-solid fa-box-open"></i>食物銀行</div><div class="dot"></div></div>
+        <div class="map-pin v" style="left:244px;top:202px;"><div class="bubble"><i class="fa-solid fa-utensils"></i>送餐志工站</div><div class="dot"></div></div>
+        <div class="map-pin v" style="left:76px;top:228px;"><div class="bubble"><i class="fa-solid fa-person-walking"></i>陪伴活動站</div><div class="dot"></div></div>
+        <div class="my-loc" style="left:188px;top:144px;"></div>
+        <div class="map-legend">
+          <div><span class="ldot" style="background:var(--primary);"></span>物資點</div>
+          <div><span class="ldot" style="background:var(--accent);"></span>志工站</div>
+          <div><span class="ldot" style="background:#1976D2;"></span>我的位置</div>
+        </div>
+      </div>
+      <div class="section-label"><i class="fa-solid fa-list-ul"></i>附近資源（4 筆）</div>
+      <div class="nearby-list">
+        <div class="nearby-card"><div class="ni-icon g"><i class="fa-solid fa-box-open"></i></div><div class="ni-info"><div class="ni-name">衣物交換站</div><div class="ni-meta"><i class="fa-solid fa-location-dot"></i> 中正路 12 號 &nbsp;<span class="tag tag-green">開放中</span></div></div><div class="ni-dist">180m</div></div>
+        <div class="nearby-card"><div class="ni-icon v"><i class="fa-solid fa-utensils"></i></div><div class="ni-info"><div class="ni-name">送餐志工站</div><div class="ni-meta"><i class="fa-solid fa-location-dot"></i> 仁愛街 45 號 &nbsp;<span class="tag tag-yellow">招募中</span></div></div><div class="ni-dist">320m</div></div>
+        <div class="nearby-card"><div class="ni-icon g"><i class="fa-solid fa-box-open"></i></div><div class="ni-info"><div class="ni-name">食物銀行</div><div class="ni-meta"><i class="fa-solid fa-location-dot"></i> 和平路 8 號 &nbsp;<span class="tag tag-green">開放中</span></div></div><div class="ni-dist">450m</div></div>
+        <div class="nearby-card"><div class="ni-icon v"><i class="fa-solid fa-person-walking"></i></div><div class="ni-info"><div class="ni-name">陪伴活動站</div><div class="ni-meta"><i class="fa-solid fa-location-dot"></i> 和平路 27 號 &nbsp;<span class="tag tag-yellow">招募中</span></div></div><div class="ni-dist">520m</div></div>
+      </div>
+    </div>
+    <nav class="bottom-nav">
+      <div class="nav-item" onclick="show('home',document.querySelectorAll('.tab-btn')[0])"><i class="fa-solid fa-house"></i>首頁</div>
+      <div class="nav-item" onclick="show('goods',document.querySelectorAll('.tab-btn')[1])"><i class="fa-solid fa-box-open"></i>物資</div>
+      <div class="nav-item active"><i class="fa-solid fa-map-location-dot"></i>地圖</div>
+      <div class="nav-item" onclick="show('volunteer',document.querySelectorAll('.tab-btn')[2])"><i class="fa-solid fa-hands-holding-circle"></i>志工</div>
+      <div class="nav-item" onclick="show('profile',document.querySelectorAll('.tab-btn')[6])"><i class="fa-solid fa-user"></i>我的</div>
+    </nav>
+  </div>
+
+  <!-- ══ 個人頁 ══ -->
+  <div class="screen" id="s-profile">
+    <div class="app-header"><h2><i class="fa-solid fa-user"></i>個人資料</h2></div>
+    <div class="scroll-area">
+      <div id="profileHeader" class="profile-header">
+        <div class="avatar"><i class="fa-solid fa-person"></i></div>
+        <div>
+          <div class="pf-name" id="pfName">尚未驗證</div>
+          <div class="pf-sub" id="pfVillage"><i class="fa-solid fa-location-dot"></i>—</div>
+          <div class="pf-sub" id="pfBadge"></div>
+        </div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-item"><div class="stat-num" id="statReqs">0</div><div class="stat-lbl">需求紀錄</div></div>
+        <div class="stat-item"><div class="stat-num" id="statVols">0</div><div class="stat-lbl">志工登記</div></div>
+        <div class="stat-item"><div class="stat-num" id="statChats">0</div><div class="stat-lbl">聊天室</div></div>
+      </div>
+      <div class="section-label"><i class="fa-solid fa-shield-halved"></i>身份驗證</div>
+      <div style="padding:0 16px 16px;" id="verifySection">
+        <div id="verifyStatus"></div>
+      </div>
+      <div class="section-label"><i class="fa-solid fa-gear"></i>設定</div>
+      <div class="settings-list">
+        <div class="setting-item" onclick="show('request',document.querySelectorAll('.tab-btn')[3])"><i class="fa-solid fa-clipboard-list s-icon"></i>我的需求<i class="fa-solid fa-chevron-right s-arrow"></i></div>
+        <div class="setting-item" onclick="show('chat',document.querySelectorAll('.tab-btn')[4])"><i class="fa-solid fa-comments s-icon"></i>聊天紀錄<i class="fa-solid fa-chevron-right s-arrow"></i></div>
+        <div class="setting-item" onclick="openFontSize()"><i class="fa-solid fa-text-height s-icon"></i>字體大小設定<i class="fa-solid fa-chevron-right s-arrow"></i></div>
+        <div class="setting-item" onclick="showAdminLink()"><i class="fa-solid fa-shield-halved s-icon"></i>管理員入口<i class="fa-solid fa-chevron-right s-arrow"></i></div>
+        <div class="setting-item" style="color:#c0392b;" onclick="clearAll()"><i class="fa-solid fa-trash s-icon" style="color:#c0392b;"></i>清除所有資料<i class="fa-solid fa-chevron-right s-arrow"></i></div>
+      </div>
+    </div>
+    <nav class="bottom-nav">
+      <div class="nav-item" onclick="show('home',document.querySelectorAll('.tab-btn')[0])"><i class="fa-solid fa-house"></i>首頁</div>
+      <div class="nav-item" onclick="show('goods',document.querySelectorAll('.tab-btn')[1])"><i class="fa-solid fa-box-open"></i>物資</div>
+      <div class="nav-item" onclick="show('map',document.querySelectorAll('.tab-btn')[5])"><i class="fa-solid fa-map-location-dot"></i>地圖</div>
+      <div class="nav-item" onclick="show('chat',document.querySelectorAll('.tab-btn')[4])"><i class="fa-solid fa-comments"></i>聊天</div>
+      <div class="nav-item active"><i class="fa-solid fa-user"></i>我的</div>
+    </nav>
+  </div>
+
+</div></div><!-- end .phone .phone-wrap -->
+
+<!-- ══ 成功 Modal ══ -->
+<div id="successModal" class="modal-overlay" style="display:none;">
+  <div class="modal-box">
+    <div style="font-size:44px;margin-bottom:12px;">✅</div>
+    <h2 style="font-size:18px;font-weight:800;margin-bottom:8px;">需求登記成功！</h2>
+    <p style="font-size:13px;color:var(--text-sub);margin-bottom:8px;">您的匿名代號</p>
+    <div id="modalAnonId" style="font-size:20px;font-weight:800;color:var(--primary);background:var(--primary-light);border-radius:12px;padding:12px;margin-bottom:14px;"></div>
+    <div style="background:#f3f4f6;border-radius:12px;padding:14px;margin-bottom:14px;text-align:left;">
+      <p style="font-size:12px;font-weight:700;color:var(--text-sub);margin-bottom:8px;">💬 聊天室代碼</p>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span id="modalChatCode" style="flex:1;font-weight:800;font-size:16px;letter-spacing:.3em;color:#1d4ed8;background:#fff;border:1.5px solid #bfdbfe;border-radius:8px;padding:8px;text-align:center;"></span>
+        <button id="copyCodeBtn" onclick="copyCode()" style="background:#1d4ed8;color:#fff;border:none;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer;">複製</button>
+      </div>
+      <p style="font-size:11px;color:var(--text-sub);margin-top:6px;">將此代碼給對方，雙方輸入相同代碼即可匿名溝通。</p>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="goChatWithCode()" style="flex:1;background:var(--primary);color:#fff;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;">💬 進入聊天室</button>
+      <button onclick="document.getElementById('successModal').style.display='none'" style="flex:1;background:#f3f4f6;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;color:var(--text-sub);">稍後再說</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 志工登記 Modal ══ -->
+<div id="volRegModal" class="modal-overlay" style="display:none;">
+  <div class="modal-box" style="text-align:left;max-width:340px;">
+    <h2 style="font-size:17px;font-weight:800;margin-bottom:14px;text-align:center;">🙋 志工登記</h2>
+    <div class="form-group"><label class="form-label">姓名 *</label><input type="text" id="vrName" class="form-input" placeholder="您的姓名" /></div>
+    <div class="form-group"><label class="form-label">聯絡電話 *</label><input type="tel" id="vrPhone" class="form-input" placeholder="09XX-XXX-XXX" /></div>
+    <div class="form-group">
+      <label class="form-label">可提供服務（複選）</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px;" id="vrServices">
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" value="聊天陪伴" />💬 聊天陪伴</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" value="散步" />🚶 散步</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" value="陪同看診" />🏥 陪同看診</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;"><input type="checkbox" value="代買物資" />🛒 代買物資</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;col-span:2"><input type="checkbox" value="家務協助" />🏠 家務協助</label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">身份認證</label>
+      <div style="border:2px dashed var(--border);border-radius:12px;padding:14px;text-align:center;cursor:pointer;font-size:13px;color:var(--text-sub);" onclick="document.getElementById('vrIdFile').click()">
+        📄 點擊上傳身分證正面<br/><span id="vrFileName" style="color:var(--primary);font-weight:700;"></span>
+      </div>
+      <input type="file" id="vrIdFile" accept=".jpg,.jpeg,.png,.pdf" style="display:none;" onchange="document.getElementById('vrFileName').textContent=this.files[0]?.name||''" />
+    </div>
+    <div style="display:flex;gap:8px;margin-top:4px;">
+      <button onclick="submitVolReg()" style="flex:1;background:var(--primary);color:#fff;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;">送出登記</button>
+      <button onclick="document.getElementById('volRegModal').style.display='none'" style="flex:1;background:#f3f4f6;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;color:var(--text-sub);">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 居民驗證 Modal ══ -->
+<div id="verifyModal" class="modal-overlay" style="display:none;">
+  <div class="modal-box" style="text-align:left;max-width:340px;">
+    <h2 style="font-size:17px;font-weight:800;margin-bottom:6px;text-align:center;">🏠 居民身份驗證</h2>
+    <p style="font-size:12px;color:var(--text-sub);text-align:center;margin-bottom:14px;">驗證後取得「已認證鄰居」徽章</p>
+    <!-- 步驟一 -->
+    <div id="vstep1">
+      <div class="form-group"><label class="form-label">手機號碼 *</label><input type="tel" id="vPhone" class="form-input" placeholder="09XX-XXX-XXX" /></div>
+      <div class="form-group">
+        <label class="form-label">所在里別 *</label>
+        <select id="vVillage" class="form-select">
+          <option value="">請選擇…</option>
+          <option>中正里</option><option>仁愛里</option><option>信義里</option>
+          <option>和平里</option><option>大同里</option><option>中山里</option>
+          <option>松山里</option><option>文山里</option><option>其他里</option>
+        </select>
+      </div>
+      <button onclick="sendVerifyCode()" style="width:100%;background:var(--primary);color:#fff;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;">發送驗證碼</button>
+    </div>
+    <!-- 步驟二 -->
+    <div id="vstep2" style="display:none;">
+      <div style="background:var(--primary-light);border-radius:10px;padding:12px;margin-bottom:14px;font-size:13px;color:var(--primary-dark);">
+        📱 驗證碼已發送至 <strong id="vDisplayPhone"></strong><br/>
+        <span style="font-size:12px;">Demo 驗證碼：</span><span id="vDemoCode" class="code-display" style="font-size:20px;padding:4px 8px;display:inline-block;"></span>
+      </div>
+      <div class="form-group"><label class="form-label">輸入 6 位驗證碼</label><input type="text" id="vCode" class="form-input" maxlength="6" placeholder="______" style="text-align:center;font-size:22px;letter-spacing:.4em;font-weight:800;" /></div>
+      <div id="vCodeErr" style="color:#c0392b;font-size:13px;text-align:center;display:none;margin-bottom:8px;">驗證碼錯誤，請重試</div>
+      <button onclick="confirmVerify()" style="width:100%;background:var(--primary);color:#fff;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;">確認驗證</button>
+    </div>
+    <button onclick="document.getElementById('verifyModal').style.display='none'" style="width:100%;background:none;border:none;color:var(--text-sub);font-size:13px;cursor:pointer;margin-top:10px;">稍後再說</button>
+  </div>
+</div>
+
+<!-- ══ 管理員連結 Modal ══ -->
+<div id="adminModal" class="modal-overlay" style="display:none;">
+  <div class="modal-box">
+    <div style="font-size:36px;margin-bottom:10px;">🔑</div>
+    <h2 style="font-size:17px;font-weight:800;margin-bottom:12px;">管理員入口</h2>
+    <p style="font-size:13px;color:var(--text-sub);margin-bottom:16px;">以下功能需要管理員權限（里長/志工負責人）</p>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <a href="pages/needs-admin.html" style="display:block;background:var(--primary);color:#fff;border-radius:12px;padding:12px;font-size:14px;font-weight:700;text-decoration:none;text-align:center;">📋 需求審核 &amp; 志工審核</a>
+      <a href="pages/match-result.html" style="display:block;background:#f3f4f6;color:var(--text);border-radius:12px;padding:12px;font-size:14px;font-weight:700;text-decoration:none;text-align:center;">🤝 志工配對結果</a>
+      <a href="font-size-preview.html" style="display:block;background:#f3f4f6;color:var(--text);border-radius:12px;padding:12px;font-size:14px;font-weight:700;text-decoration:none;text-align:center;">🔤 字體大小設定</a>
+    </div>
+    <button onclick="document.getElementById('adminModal').style.display='none'" style="width:100%;background:none;border:none;color:var(--text-sub);font-size:13px;cursor:pointer;margin-top:14px;">關閉</button>
+  </div>
+</div>
+
+<script src="js/utils.js"></script>
+<script>
+// ── 頁面切換 ──
+function show(id, btn) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('s-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (id === 'goods')   renderGoods();
+  if (id === 'volunteer') renderVolMatch();
+  if (id === 'request') renderMyReqs();
+  if (id === 'profile') renderProfile();
+  if (id === 'chat')    renderChatHistory();
+}
+
+// ── 物資渲染 ──
+function renderGoods(filter) {
+  const list = loadFromStorage('needs_list', [])
+    .filter(r => r.status === 'approved' && r.type === '生活物資');
+  const filtered = filter && filter !== '全部' ? list.filter(r => r.supply?.category === filter) : list;
+  const el = document.getElementById('goodsList');
+  if (!filtered.length) {
+    el.innerHTML = `<div style="text-align:center;color:var(--text-sub);padding:32px 0;font-size:14px;">目前沒有物資需求</div>`;
+    document.getElementById('qGoodsCount').textContent = '暫無資料';
+    return;
+  }
+  document.getElementById('qGoodsCount').textContent = filtered.length + ' 筆可媒合';
+  el.innerHTML = filtered.map(r => `
+    <div class="goods-card">
+      <div class="gc-top">
+        <div class="gc-name">${r.supply?.category || r.type}
+          ${r.supply?.urgency === '緊急' ? '<span class="tag tag-red">緊急</span>' : '<span class="tag tag-green">一般</span>'}
+        </div>
+        <div class="gc-meta">
+          ${r.supply?.qty ? `<div><i class="fa-solid fa-cubes-stacked"></i>${r.supply.qty}</div>` : ''}
+          <div><i class="fa-regular fa-calendar"></i>${formatDate(r.createdAt)}</div>
+          <div><i class="fa-solid fa-user-secret"></i>${r.id}</div>
+        </div>
+      </div>
+      <div class="gc-actions">
+        <button class="gc-btn primary" onclick="goChatRoom('${r.id}')"><i class="fa-solid fa-comments"></i>聯絡索取</button>
+        <button class="gc-btn chat" onclick="goChatRoom('${r.id}')"><i class="fa-solid fa-message"></i>匿名聊天</button>
+      </div>
+    </div>`).join('');
+}
+
+function filterGoods(cat, btn) {
+  document.querySelectorAll('.filter-bar .chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderGoods(cat);
+}
+
+// ── 志工配對渲染 ──
+function renderVolMatch() {
+  const vols = loadFromStorage('volunteers', []);
+  const el   = document.getElementById('volMatchList');
+  document.getElementById('qVolCount').textContent = vols.length ? vols.length + ' 人報名中' : '暫無資料';
+  if (!vols.length) {
+    el.innerHTML = `<div style="text-align:center;color:var(--text-sub);padding:24px 0;font-size:14px;">目前沒有志工登記</div>`;
+    return;
+  }
+  el.innerHTML = vols.map(v => `
+    <div class="vol-card">
+      <div class="vc-head">
+        <div class="vc-name">${v.name}</div>
+        ${v.verified ? '<span class="badge-vol">💜 愛心志工</span>' : '<span class="tag tag-gray">認證中</span>'}
+      </div>
+      <div class="vc-meta">
+        <div><i class="fa-solid fa-hand-holding-heart"></i>${v.services?.join('、') || '–'}</div>
+        <div><i class="fa-regular fa-clock"></i>${v.times?.join('、') || '–'}</div>
+      </div>
+      <div class="vc-footer">
+        <div class="vc-quota">可服務時段 <span>${v.times?.length || 0}</span> 種</div>
+        <button class="btn-sm btn-primary" onclick="goChatRoom('VOL_${v.id}')">聯絡</button>
+      </div>
+    </div>`).join('');
+}
+
+// ── 需求登記 ──
+function toggleSupply(val) {
+  const s = document.getElementById('supplySection');
+  s.classList.toggle('show', val === '生活物資');
+}
+
+function submitRequest() {
+  const type = document.getElementById('reqTypeSelect').value;
+  if (!type) { alert('請選擇需求類型'); return; }
+  if (type === '生活物資' && !document.getElementById('supplyCat').value) {
+    alert('請選擇物資類別'); return;
+  }
+  const anonId = generateAnonymousId();
+  const supply = type === '生活物資' ? {
+    category: document.getElementById('supplyCat').value,
+    qty: document.getElementById('supplyQty').value.trim(),
+    urgency: document.querySelector('input[name="urgency"]:checked')?.value || '一般'
+  } : null;
+  const record = {
+    id: anonId, chatCode: anonId, type, supply,
+    desc: document.getElementById('reqDesc').value.trim(),
+    contact: document.getElementById('reqContact').value.trim(),
+    status: 'pending', createdAt: new Date().toISOString()
+  };
+  const list = loadFromStorage('needs_list', []);
+  list.unshift(record);
+  saveToStorage('needs_list', list);
+  // 顯示 Modal
+  document.getElementById('modalAnonId').textContent  = anonId;
+  document.getElementById('modalChatCode').textContent = anonId;
+  document.getElementById('successModal').style.display = 'flex';
+  // 重置
+  document.getElementById('reqTypeSelect').value = '';
+  document.getElementById('supplySection').classList.remove('show');
+  document.getElementById('supplyCat').value = '';
+  document.getElementById('supplyQty').value = '';
+  document.getElementById('reqDesc').value   = '';
+  document.getElementById('reqContact').value = '';
+  renderMyReqs();
+}
+
+function copyCode() {
+  const code = document.getElementById('modalChatCode').textContent;
+  navigator.clipboard?.writeText(code).then(() => {
+    const btn = document.getElementById('copyCodeBtn');
+    btn.textContent = '已複製！'; btn.style.background = '#16a34a';
+    setTimeout(() => { btn.textContent = '複製'; btn.style.background = '#1d4ed8'; }, 2000);
+  });
+}
+
+function goChatWithCode() {
+  const code = document.getElementById('modalChatCode').textContent;
+  document.getElementById('successModal').style.display = 'none';
+  goChatRoom(code);
+}
+
+function renderMyReqs() {
+  const list = loadFromStorage('needs_list', []);
+  const el   = document.getElementById('myReqList');
+  if (!list.length) { el.innerHTML = `<div style="text-align:center;color:var(--text-sub);font-size:14px;padding:16px 0;">尚無紀錄</div>`; return; }
+  const badges = { pending:'<span class="tag tag-yellow">待審核</span>', approved:'<span class="tag tag-green">已通過</span>', rejected:'<span class="tag tag-red">已拒絕</span>' };
+  el.innerHTML = list.slice(0,5).map(r => `
+    <div class="req-card">
+      <div>
+        <div class="rc-title">${r.supply?.category || r.type}${r.supply?.qty ? '（'+r.supply.qty+'）' : ''}</div>
+        <div class="rc-meta"><i class="fa-regular fa-calendar"></i>${formatDate(r.createdAt)} &nbsp; ${r.id}</div>
+      </div>
+      ${badges[r.status] || ''}
+    </div>`).join('');
+  // 驗證狀態列
+  const raw = localStorage.getItem('resident_identity');
+  const bar = document.getElementById('verifyBar');
+  if (raw) {
+    const ri = JSON.parse(raw);
+    bar.innerHTML = `<div style="display:flex;align-items:center;gap:10px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:10px 14px;margin-bottom:4px;">
+      <span class="badge-nbr">✓ 已認證鄰居</span>
+      <span style="font-size:13px;color:#1d4ed8;font-weight:600;">${ri.village}</span>
+      <span style="font-size:12px;color:#93c5fd;margin-left:auto;">${ri.phone.replace(/(\d{4})(\d+)/,'$1****')}</span>
+    </div>`;
+  } else {
+    bar.innerHTML = `<div style="background:#fefce8;border:1px solid #fde047;border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+      <span style="font-size:18px;">⚠️</span>
+      <div style="flex:1;font-size:13px;color:#854d0e;">尚未完成居民驗證</div>
+      <button onclick="document.getElementById('verifyModal').style.display='flex'" style="background:#f59e0b;color:#fff;border:none;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;">立即驗證</button>
+    </div>`;
+  }
+}
+
+// ── 聊天室 ──
+let chatRoom = '', chatAlias = '', chatRole = '居民';
+
+function renderChatHistory() {
+  const keys = Object.keys(localStorage).filter(k => k.startsWith('chat_'));
+  const el   = document.getElementById('chatHistoryList');
+  if (!keys.length) { el.innerHTML = `<div style="text-align:center;color:var(--text-sub);font-size:13px;padding:8px 0;">尚無聊天紀錄</div>`; return; }
+  document.getElementById('statChats').textContent = keys.length;
+  el.innerHTML = keys.map(k => {
+    const msgs = loadFromStorage(k, []);
+    const last = msgs[msgs.length-1];
+    return `<div class="chat-row" onclick="enterChatRoomById('${k.replace('chat_','')}')">
+      <div><div style="font-size:14px;font-weight:700;">${k.replace('chat_','')}</div>
+      <div style="font-size:12px;color:var(--text-sub);">${last ? last.text?.slice(0,20)+'…' : '空白'}</div></div>
+      <i class="fa-solid fa-chevron-right" style="color:var(--border);"></i>
+    </div>`;
+  }).join('');
+}
+
+function enterChatRoomById(id) {
+  document.getElementById('chatRoomInput').value = id;
+  enterChatRoom();
+}
+
+function enterChatRoom() {
+  const id  = document.getElementById('chatRoomInput').value.trim();
+  const nick = document.getElementById('chatNickname').value.trim();
+  chatRole  = document.querySelector('input[name="chatRole"]:checked').value;
+  if (!id) { alert('請輸入聊天室代號'); return; }
+  chatRoom  = 'chat_' + id;
+  chatAlias = nick || (chatRole === '居民' ? '匿名居民' : '匿名志工');
+  // 系統訊息
+  const msgs = loadFromStorage(chatRoom, []);
+  msgs.push({ type:'system', text: chatAlias+'已進入聊天室', sentAt: new Date().toISOString() });
+  saveToStorage(chatRoom, msgs);
+  document.getElementById('chatEntryView').style.display = 'none';
+  document.getElementById('chatRoomView').style.display  = 'flex';
+  document.getElementById('chatHeader').innerHTML = `<span class="header-back" onclick="exitChatRoom()">‹ 返回</span><h2><i class="fa-solid fa-comments"></i>${id}</h2>`;
+  document.getElementById('chatRoomLabel').textContent = '身份：' + chatAlias;
+  renderMsgs();
+}
+
+function exitChatRoom() {
+  document.getElementById('chatEntryView').style.display = 'block';
+  document.getElementById('chatRoomView').style.display  = 'none';
+  document.getElementById('chatHeader').innerHTML = '<h2><i class="fa-solid fa-comments"></i>匿名聊天室</h2>';
+  renderChatHistory();
+}
+
+function renderMsgs() {
+  const list = loadFromStorage(chatRoom, []);
+  const el   = document.getElementById('msgList');
+  if (!list.length) { el.innerHTML = `<div style="text-align:center;color:var(--text-sub);font-size:13px;padding:24px 0;">開始傳訊息吧！</div>`; return; }
+  el.innerHTML = list.map(m => {
+    if (m.type === 'system' || m.type === 'contact') return `<div class="msg-sys">${m.type==='contact'?'📞':''} ${m.text}</div>`;
+    const isMe = m.alias === chatAlias;
+    return `<div class="${isMe ? 'msg-me' : 'msg-other'}">
+      ${!isMe ? `<div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:3px;">${m.alias}</div>` : ''}
+      ${m.text}
+      <div style="font-size:10px;color:#aaa;margin-top:3px;${isMe?'text-align:right;':''}">${formatDate(m.sentAt).split(' ')[1]}</div>
+    </div>`;
+  }).join('');
+  el.scrollTop = el.scrollHeight;
+}
+
+function sendMsg() {
+  const input = document.getElementById('msgInput');
+  const text  = input.value.trim();
+  if (!text) return;
+  const msgs = loadFromStorage(chatRoom, []);
+  msgs.push({ alias: chatAlias, role: chatRole, text, type:'message', sentAt: new Date().toISOString() });
+  saveToStorage(chatRoom, msgs);
+  input.value = '';
+  renderMsgs();
+}
+
+function shareContact() {
+  const info = prompt('請輸入您願意分享的聯絡方式（如 LINE ID 或電話）：');
+  if (!info) return;
+  const msgs = loadFromStorage(chatRoom, []);
+  msgs.push({ type:'contact', text: chatAlias+'分享聯絡方式：'+info, sentAt: new Date().toISOString() });
+  saveToStorage(chatRoom, msgs);
+  renderMsgs();
+}
+
+function goChatRoom(id) {
+  document.getElementById('chatRoomInput').value = id;
+  show('chat', document.querySelectorAll('.tab-btn')[4]);
+  setTimeout(enterChatRoom, 100);
+}
+
+// ── 志工登記 ──
+function showVolRegModal() { document.getElementById('volRegModal').style.display = 'flex'; }
+
+function submitVolReg() {
+  const name  = document.getElementById('vrName').value.trim();
+  const phone = document.getElementById('vrPhone').value.trim();
+  const services = [...document.querySelectorAll('#vrServices input:checked')].map(c => c.value);
+  const hasId = document.getElementById('vrIdFile').files.length > 0;
+  if (!name)  { alert('請填寫姓名'); return; }
+  if (!phone) { alert('請填寫聯絡電話'); return; }
+  if (!services.length) { alert('請選擇至少一項服務'); return; }
+  if (!hasId) { alert('請上傳身分證以完成認證'); return; }
+  const record = { id:'V_'+Date.now(), name, phone, services, times:['平日上午','平日下午'], verified:false, createdAt: new Date().toISOString() };
+  const list = loadFromStorage('volunteers', []);
+  list.unshift(record);
+  saveToStorage('volunteers', list);
+  document.getElementById('volRegModal').style.display = 'none';
+  alert('✅ 志工登記成功！審核通過後將取得「愛心志工」徽章。');
+  renderVolMatch();
+}
+
+// ── 居民驗證 ──
+let _vCode = '';
+function sendVerifyCode() {
+  const phone   = document.getElementById('vPhone').value.trim();
+  const village = document.getElementById('vVillage').value;
+  if (!phone || !village) { alert('請填寫手機號碼並選擇里別'); return; }
+  _vCode = String(Math.floor(100000 + Math.random() * 900000));
+  document.getElementById('vDisplayPhone').textContent = phone;
+  document.getElementById('vDemoCode').textContent     = _vCode;
+  document.getElementById('vstep1').style.display = 'none';
+  document.getElementById('vstep2').style.display = 'block';
+}
+function confirmVerify() {
+  const input = document.getElementById('vCode').value.trim();
+  if (input !== _vCode) { document.getElementById('vCodeErr').style.display = 'block'; return; }
+  document.getElementById('vCodeErr').style.display = 'none';
+  const ri = { phone: document.getElementById('vPhone').value.trim(), village: document.getElementById('vVillage').value, badge:'neighbor', verifiedAt: new Date().toISOString() };
+  localStorage.setItem('resident_identity', JSON.stringify(ri));
+  document.getElementById('verifyModal').style.display = 'none';
+  renderProfile();
+  renderMyReqs();
+  alert('✅ 驗證成功！已取得「已認證鄰居」徽章。');
+}
+
+// ── 個人頁 ──
+function renderProfile() {
+  const ri   = JSON.parse(localStorage.getItem('resident_identity') || 'null');
+  const reqs = loadFromStorage('needs_list', []);
+  const vols = loadFromStorage('volunteers', []);
+  const chats = Object.keys(localStorage).filter(k => k.startsWith('chat_')).length;
+  document.getElementById('statReqs').textContent  = reqs.length;
+  document.getElementById('statVols').textContent  = vols.length;
+  document.getElementById('statChats').textContent = chats;
+  if (ri) {
+    document.getElementById('pfName').textContent    = ri.phone.replace(/(\d{4})(\d+)/,'$1****');
+    document.getElementById('pfVillage').innerHTML   = `<i class="fa-solid fa-location-dot"></i>${ri.village}`;
+    document.getElementById('pfBadge').innerHTML     = `<span class="badge-nbr">✓ 已認證鄰居</span>`;
+    document.getElementById('verifyStatus').innerHTML = `<div style="background:var(--primary-light);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--primary-dark);">✓ 已完成居民驗證（${ri.village}）</div>`;
+  } else {
+    document.getElementById('verifyStatus').innerHTML = `<button onclick="document.getElementById('verifyModal').style.display='flex'" style="width:100%;background:var(--primary);color:#fff;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;"><i class="fa-solid fa-mobile-screen-button"></i> 立即進行手機驗證</button>`;
+  }
+}
+
+function openFontSize() { window.location.href = 'font-size-preview.html'; }
+function showAdminLink() { document.getElementById('adminModal').style.display = 'flex'; }
+function clearAll() {
+  if (!confirm('確定要清除所有本機資料嗎？')) return;
+  localStorage.clear();
+  location.reload();
+}
+
+// ── 初始化 ──
+document.addEventListener('DOMContentLoaded', () => {
+  renderGoods();
+  renderVolMatch();
+  renderMyReqs();
+  renderProfile();
+});
+</script>
 </body>
 </html>
