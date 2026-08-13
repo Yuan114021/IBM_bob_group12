@@ -13,6 +13,9 @@ import RegisterPage from './pages/RegisterPage'
 import ResourceDetailPage from './pages/ResourceDetailPage'
 import ProfilePage from './pages/ProfilePage'
 import FontSizePage from './pages/FontSizePage'
+import VolunteerPage from './pages/VolunteerPage'
+import ElderPage from './pages/ElderPage'
+import MatchingPage from './pages/MatchingPage'
 
 export default function App() {
   return (
@@ -31,6 +34,9 @@ export default function App() {
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
               <Route path="/font-size" element={<FontSizePage />} />
+              <Route path="/volunteer" element={<VolunteerPage />} />
+              <Route path="/elder" element={<ElderPage />} />
+              <Route path="/matching" element={<MatchingPage />} />
             </Routes>
             <BottomNav />
           </div>

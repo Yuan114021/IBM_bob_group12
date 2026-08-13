@@ -55,3 +55,42 @@ class Demand(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     owner = relationship("User", back_populates="demands")
+
+
+class Volunteer(Base):
+    __tablename__ = "volunteers"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    phone = Column(String, nullable=False)
+    services = Column(String, nullable=False)   # JSON 陣列字串，例如 '["居家訪視","課程教學"]'
+    time_slots = Column(String, nullable=False)  # JSON 陣列字串
+    is_verified = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class Elder(Base):
+    __tablename__ = "elders"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    services = Column(String, nullable=False)   # JSON 陣列字串
+    time_slots = Column(String, nullable=False)  # JSON 陣列字串
+    note = Column(Text, nullable=True)
+    is_matched = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class ServiceRequest(Base):
+    __tablename__ = "service_requests"
+
+    id = Column(Integer, primary_key=True, index=True)
+    anonymous_id = Column(String, nullable=False, index=True)
+    request_type = Column(String, nullable=False)   # 服務類型
+    category = Column(String, nullable=True)        # 物資分類（物資需求時使用）
+    quantity = Column(String, nullable=True)
+    urgency = Column(String, nullable=True)         # 一般/急迫
+    description = Column(Text, nullable=True)
+    phone = Column(String, nullable=True)
+    status = Column(String, default="pending")      # pending / approved / fulfilled
+    created_at = Column(DateTime, default=datetime.utcnow)

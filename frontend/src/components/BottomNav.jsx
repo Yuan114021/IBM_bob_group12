@@ -14,11 +14,11 @@ export default function BottomNav() {
       <NavLink to="/resources" className={`nav-item ${p === '/resources' ? 'active' : ''}`}>
         <i className="fa-solid fa-box-open"></i>物資
       </NavLink>
+      <NavLink to="/matching" className={`nav-item ${p === '/matching' || p === '/volunteer' || p === '/elder' ? 'active' : ''}`}>
+        <i className="fa-solid fa-handshake"></i>志工
+      </NavLink>
       <NavLink to="/map" className={`nav-item ${p === '/map' ? 'active' : ''}`}>
         <i className="fa-solid fa-map-location-dot"></i>地圖
-      </NavLink>
-      <NavLink to="/demand" className={`nav-item ${p === '/demand' ? 'active' : ''}`}>
-        <i className="fa-solid fa-clipboard-list"></i>需求
       </NavLink>
       <NavLink to={user ? '/profile' : '/login'} className={`nav-item ${p === '/profile' || p === '/login' ? 'active' : ''}`}>
         <i className="fa-solid fa-user"></i>我的

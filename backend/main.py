@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 import os
 from database import engine
 import models
-from routers import auth, resources, demands
+from routers import auth, resources, demands, volunteers, elders, service_requests
 
 # 建立所有資料表
 models.Base.metadata.create_all(bind=engine)
@@ -28,6 +28,9 @@ app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 app.include_router(auth.router)
 app.include_router(resources.router)
 app.include_router(demands.router)
+app.include_router(volunteers.router)
+app.include_router(elders.router)
+app.include_router(service_requests.router)
 
 
 @app.get("/health")
