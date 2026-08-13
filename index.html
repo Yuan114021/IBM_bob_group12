@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>社區關懷平台</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- 導覽列 -->
+  <nav class="bg-white border-b border-gray-200 shadow-sm">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="index.html" class="text-xl font-bold text-blue-600 tracking-wide">🏘️ 社區關懷平台</a>
+      <div class="flex gap-6 text-sm text-gray-600">
+        <a href="pages/needs.html" class="nav-link hover:text-blue-600 transition">需求登記</a>
+        <a href="pages/matching.html" class="nav-link hover:text-blue-600 transition">志工媒合</a>
+        <a href="pages/needs-admin.html" class="nav-link hover:text-blue-600 transition text-gray-400">管理員</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="max-w-4xl mx-auto px-4 pt-16 pb-10 text-center">
+    <h1 class="text-4xl font-bold text-gray-800 mb-4">讓關懷不缺席</h1>
+    <p class="text-lg text-gray-500 mb-10">連結社區長者與志工，讓每一份需求都能被看見、被幫助。</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+
+      <!-- 需求登記 -->
+      <a href="pages/needs.html"
+         class="card-hover bg-white rounded-2xl border border-gray-200 p-8 text-left block transition">
+        <div class="text-4xl mb-4">📋</div>
+        <h2 class="text-xl font-bold text-gray-800 mb-2">需求登記</h2>
+        <p class="text-gray-500 text-sm leading-relaxed">
+          居民可匿名登記生活物資、就醫陪同、日常陪伴等需求。<br/>
+          系統自動產生匿名代號，保護您的隱私。
+        </p>
+        <div class="mt-4 text-blue-600 text-sm font-medium">前往登記 →</div>
+      </a>
+
+      <!-- 志工媒合 -->
+      <a href="pages/matching.html"
+         class="card-hover bg-white rounded-2xl border border-gray-200 p-8 text-left block transition">
+        <div class="text-4xl mb-4">🤝</div>
+        <h2 class="text-xl font-bold text-gray-800 mb-2">志工媒合</h2>
+        <p class="text-gray-500 text-sm leading-relaxed">
+          長者登記陪伴需求，志工登記可服務時段與項目。<br/>
+          平台自動為雙方找到最適合的配對。
+        </p>
+        <div class="mt-4 text-blue-600 text-sm font-medium">前往媒合 →</div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- 特色說明 -->
+  <section class="max-w-4xl mx-auto px-4 pb-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-white rounded-xl border border-gray-100 p-5 text-center">
+        <div class="text-2xl mb-2">🔒</div>
+        <div class="font-semibold text-gray-700 text-sm">匿名保護</div>
+        <div class="text-xs text-gray-400 mt-1">需求登記全程匿名，避免標籤化</div>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-100 p-5 text-center">
+        <div class="text-2xl mb-2">✅</div>
+        <div class="font-semibold text-gray-700 text-sm">審核機制</div>
+        <div class="text-xs text-gray-400 mt-1">經里長/志工審核，防範濫用</div>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-100 p-5 text-center">
+        <div class="text-2xl mb-2">💞</div>
+        <div class="font-semibold text-gray-700 text-sm">雙向配對</div>
+        <div class="text-xs text-gray-400 mt-1">依時段與服務項目智慧媒合</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="text-center text-xs text-gray-400 pb-6">
+    © 2025 社區關懷平台 · IBM Bob Group 12
+  </footer>
+
+</body>
+</html>
