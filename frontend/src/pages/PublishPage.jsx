@@ -46,7 +46,8 @@ export default function PublishPage() {
     if (form.category === '食品' && !form.expiry_date) { setError('食品類別必須填寫有效期限'); return }
     setLoading(true); setError('')
     try {
-      const pos = await getLocation()
+      let pos = { lat: 25.0330, lng: 121.5654 } // 預設台北市中心
+      try { pos = await getLocation() } catch (_) {}
       const data = new FormData()
       Object.entries(form).forEach(([k, v]) => v && data.append(k, v))
       data.append('location_lat', pos.lat)

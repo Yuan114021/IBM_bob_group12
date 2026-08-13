@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>長者登記 — 社區關懷平台</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/utils.js"></script>
+  <script>document.addEventListener('DOMContentLoaded', applyGlobalFontSize);</script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <nav class="bg-white border-b border-gray-200 shadow-sm">
+    <div class="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="../index.html" class="text-lg font-bold text-blue-600">🏘️ 社區關懷平台</a>
+      <a href="matching.html" class="text-sm text-gray-500 hover:text-blue-600">← 返回媒合首頁</a>
+    </div>
+  </nav>
+
+  <main class="max-w-2xl mx-auto px-4 py-10">
+    <div class="flex items-center gap-3 mb-1">
+      <span class="text-3xl">👴</span>
+      <h1 class="text-2xl font-bold text-gray-800">長者陪伴需求登記</h1>
+    </div>
+    <p class="text-sm text-gray-500 mb-8 ml-12">請填寫您需要的服務類型與方便的時段。</p>
+
+    <form id="elderForm" class="bg-white rounded-2xl border border-gray-200 p-8 space-y-6">
+
+      <!-- 姓名（匿名顯示） -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">稱呼 <span class="text-red-500">*</span></label>
+        <input type="text" id="elderName" required placeholder="例：王伯伯、李奶奶"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+        <p class="text-xs text-gray-400 mt-1">配對結果僅顯示稱呼，保護您的隱私。</p>
+      </div>
+
+      <!-- 需要的服務類型 -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-3">需要的陪伴／服務 <span class="text-red-500">*</span>（可複選）</label>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="flex items-center gap-2 bg-gray-50 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-blue-300 transition">
+            <input type="checkbox" name="elderService" value="聊天陪伴" class="accent-blue-600" />
+            <span class="text-sm">💬 聊天陪伴</span>
+          </label>
+          <label class="flex items-center gap-2 bg-gray-50 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-blue-300 transition">
+            <input type="checkbox" name="elderService" value="散步" class="accent-blue-600" />
+            <span class="text-sm">🚶 散步</span>
+          </label>
+          <label class="flex items-center gap-2 bg-gray-50 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-blue-300 transition">
+            <input type="checkbox" name="elderService" value="陪同看診" class="accent-blue-600" />
+            <span class="text-sm">🏥 陪同看診</span>
+          </label>
+          <label class="flex items-center gap-2 bg-gray-50 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-blue-300 transition">
+            <input type="checkbox" name="elderService" value="代買物資" class="accent-blue-600" />
+            <span class="text-sm">🛒 代買物資</span>
+          </label>
+          <label class="flex items-center gap-2 bg-gray-50 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-blue-300 transition col-span-2">
+            <input type="checkbox" name="elderService" value="家務協助" class="accent-blue-600" />
+            <span class="text-sm">🏠 家務協助</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 方便時段 -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-3">方便的時段 <span class="text-red-500">*</span>（可複選）</label>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="flex items-center gap-2 bg-gray-50 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-blue-300 transition">
+            <input type="checkbox" name="elderTime" value="平日上午" class="accent-blue-600" />
+            <span class="text-sm">平日上午</span>
+          </label>
+          <label class="flex items-center gap-2 bg-gray-50 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-blue-300 transition">
+            <input type="checkbox" name="elderTime" value="平日下午" class="accent-blue-600" />
+            <span class="text-sm">平日下午</span>
+          </label>
+          <label class="flex items-center gap-2 bg-gray-50 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-blue-300 transition">
+            <input type="checkbox" name="elderTime" value="平日晚上" class="accent-blue-600" />
+            <span class="text-sm">平日晚上</span>
+          </label>
+          <label class="flex items-center gap-2 bg-gray-50 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-blue-300 transition">
+            <input type="checkbox" name="elderTime" value="假日上午" class="accent-blue-600" />
+            <span class="text-sm">假日上午</span>
+          </label>
+          <label class="flex items-center gap-2 bg-gray-50 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-blue-300 transition col-span-2">
+            <input type="checkbox" name="elderTime" value="假日下午" class="accent-blue-600" />
+            <span class="text-sm">假日下午</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 備註 -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">備註（選填）</label>
+        <textarea id="elderNote" rows="2" placeholder="其他想說明的事項"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 resize-none"></textarea>
+      </div>
+
+      <button type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl py-3 text-sm transition">
+        送出登記
+      </button>
+    </form>
+  </main>
+
+  <!-- 成功提示 -->
+  <div id="successModal" class="modal-overlay hidden">
+    <div class="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 text-center shadow-xl">
+      <div class="text-5xl mb-4">🎉</div>
+      <h2 class="text-xl font-bold text-gray-800 mb-2">登記成功！</h2>
+      <p class="text-sm text-gray-500 mb-6">我們會盡快為您尋找合適的志工，請靜候配對結果。</p>
+      <div class="flex gap-3">
+        <a href="match-result.html"
+           class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl py-2 text-sm transition text-center">
+          查看配對結果
+        </a>
+        <button onclick="document.getElementById('successModal').classList.add('hidden')"
+           class="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold rounded-xl py-2 text-sm transition">
+          繼續
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/utils.js"></script>
+  <script>
+    document.getElementById('elderForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('elderName').value.trim();
+      const services = [...document.querySelectorAll('input[name="elderService"]:checked')].map(el => el.value);
+      const times    = [...document.querySelectorAll('input[name="elderTime"]:checked')].map(el => el.value);
+      const note     = document.getElementById('elderNote').value.trim();
+
+      if (!name) { alert('請填寫稱呼'); return; }
+      if (services.length === 0) { alert('請至少選擇一項需要的服務'); return; }
+      if (times.length === 0) { alert('請至少選擇一個方便的時段'); return; }
+
+      const record = { id: 'E_' + Date.now(), name, services, times, note, createdAt: new Date().toISOString() };
+      const list = loadFromStorage('elders', []);
+      list.unshift(record);
+      saveToStorage('elders', list);
+      e.target.reset();
+      document.getElementById('successModal').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
