@@ -90,8 +90,23 @@ export default function HomePage() {
       </div>
       <div style={{ padding: '0 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
         {[
-          { title: '食品分享安全提醒', date: '2025/07/10', tag: '置頂', body: '食品類物資請確實標示有效期限，領取者請自行評估食用安全。' },
-          { title: '新功能：需求媒合上線', date: '2025/07/08', tag: null, body: '發布物資時，系統將自動比對附近未滿足的需求，方便直接聯繫。' },
+          {
+            title: '食品分享安全提醒',
+            date: '2025/07/10',
+            tag: '置頂',
+            body: '食品類物資請確實標示有效期限，領取者請自行評估食用安全。',
+            link: 'https://www.fda.gov.tw/TC/site.aspx?sid=11',
+            linkText: '食藥署食品安全資訊',
+          },
+          {
+            title: '新功能：需求媒合上線',
+            date: '2025/07/08',
+            tag: null,
+            body: '發布物資時，系統將自動比對附近未滿足的需求，方便直接聯繫。',
+            link: '/demand',
+            linkText: '立即登記需求',
+            internal: true,
+          },
         ].map(a => (
           <div key={a.title} style={{
             background: 'var(--surface)',
@@ -99,7 +114,8 @@ export default function HomePage() {
             border: '1px solid var(--border)',
             padding: '12px 14px',
             borderLeft: '4px solid var(--primary)',
-          }}>
+            cursor: 'pointer',
+          }} onClick={() => a.internal ? navigate(a.link) : window.open(a.link, '_blank')}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
               <div style={{ fontSize: 16, fontWeight: 700 }}>{a.title}</div>
               {a.tag && <span className="tag tag-yellow">{a.tag}</span>}
@@ -107,7 +123,10 @@ export default function HomePage() {
             <div style={{ fontSize: 13, color: 'var(--text-sub)', marginBottom: 5 }}>
               <i className="fa-regular fa-calendar" style={{ marginRight: 3 }}></i>{a.date}
             </div>
-            <div style={{ fontSize: 14, color: '#555', lineHeight: 1.55 }}>{a.body}</div>
+            <div style={{ fontSize: 14, color: '#555', lineHeight: 1.55, marginBottom: 8 }}>{a.body}</div>
+            <div style={{ fontSize: 13, color: 'var(--primary)', fontWeight: 600 }}>
+              <i className="fa-solid fa-arrow-up-right-from-square" style={{ marginRight: 4 }}></i>{a.linkText}
+            </div>
           </div>
         ))}
       </div>
