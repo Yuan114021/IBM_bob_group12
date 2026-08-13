@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>??蝯? ??蝷曉??撟喳</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/utils.js"></script>
+  <script>document.addEventListener('DOMContentLoaded', applyGlobalFontSize);</script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <nav class="bg-white border-b border-gray-200 shadow-sm">
+    <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="../index.html" class="text-lg font-bold text-blue-600">??儭?蝷曉??撟喳</a>
+      <a href="matching.html" class="text-sm text-gray-500 hover:text-blue-600">??餈?慦?擐?</a>
+    </div>
+  </nav>
+
+  <main class="max-w-3xl mx-auto px-4 py-10">
+    <h1 class="text-2xl font-bold text-gray-800 mb-1">??蝯?</h1>
+    <p class="text-sm text-gray-500 mb-8">?寞??????畾萎漱??隞乩??箇????蝯???/p>
+
+    <!-- 蝯梯???-->
+    <div class="grid grid-cols-3 gap-4 mb-8">
+      <div class="bg-white rounded-xl border border-gray-200 p-4 text-center">
+        <div class="text-2xl font-bold text-blue-600" id="statElders">0</div>
+        <div class="text-xs text-gray-500 mt-1">?餉??瑁?/div>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-200 p-4 text-center">
+        <div class="text-2xl font-bold text-green-600" id="statVolunteers">0</div>
+        <div class="text-xs text-gray-500 mt-1">?餉?敹極</div>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-200 p-4 text-center">
+        <div class="text-2xl font-bold text-purple-600" id="statMatches">0</div>
+        <div class="text-xs text-gray-500 mt-1">????</div>
+      </div>
+    </div>
+
+    <!-- ??皜 -->
+    <div id="matchList" class="space-y-4"></div>
+
+    <!-- ?芷?撠??-->
+    <div id="unmatchedSection" class="hidden mt-10">
+      <h2 class="text-base font-semibold text-gray-600 mb-3">??撠??????/h2>
+      <div id="unmatchedList" class="space-y-3"></div>
+    </div>
+  </main>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/matching.js"></script>
+</body>
+</html>
