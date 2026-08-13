@@ -101,8 +101,9 @@ export default function ProfilePage() {
       <div style={{ padding: '0 16px 16px', display: 'flex', flexDirection: 'column' }}>
         {[
           { icon: 'fa-box-open', label: '發布新物資', action: () => navigate('/publish') },
-          { icon: 'fa-clipboard-list', label: '登記需求', action: () => navigate('/demand') },
-          { icon: 'fa-right-from-bracket', label: '登出', action: handleLogout, red: true },
+            { icon: 'fa-clipboard-list', label: '登記需求', action: () => navigate('/demand') },
+            { icon: 'fa-text-height', label: '字體大小設定', action: () => navigate('/font-size') },
+            { icon: 'fa-right-from-bracket', label: '登出', action: handleLogout, red: true },
         ].map((item, i, arr) => (
           <div key={item.label} onClick={item.action} style={{
             background: 'var(--surface)',
