@@ -48,8 +48,10 @@ form.addEventListener('submit', (e) => {
   }
 
   const anonymousId = generateAnonymousId();
+  const chatCode    = anonymousId;   // 聊天室代碼 = 需求匿名代號，方便對方輸入
   const record = {
     id: anonymousId,
+    chatCode,
     type,
     desc: needDescEl.value.trim(),
     contact: needContactEl.value.trim(),
@@ -62,8 +64,10 @@ form.addEventListener('submit', (e) => {
   list.unshift(record);
   saveToStorage('needs_list', list);
 
-  // 顯示匿名代號
+  // 顯示匿名代號 + 聊天室代碼
   anonymousIdEl.textContent = anonymousId;
+  document.getElementById('chatCodeDisplay').textContent = chatCode;
+  document.getElementById('chatEntryLink').href = `chat.html?room=${encodeURIComponent(chatCode)}`;
   successModal.classList.remove('hidden');
 
   // 重置表單
