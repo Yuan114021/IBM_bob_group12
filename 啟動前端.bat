@@ -1,17 +1,23 @@
 @echo off
-chcp 65001 >nul
 echo ========================================
-echo   社區物資共享平台 - 前端啟動中...
+echo   Frontend Starting...
 echo ========================================
 cd /d "%~dp0frontend"
 
 if not exist node_modules (
-  echo 第一次執行，安裝套件中（約1-2分鐘）...
+  echo Installing packages, please wait...
   npm install
+  if errorlevel 1 (
+    echo [ERROR] npm install failed
+    pause
+    exit /b
+  )
 )
 
-echo 前端啟動於 http://localhost:5173
-echo 按 Ctrl+C 停止
+echo Frontend: http://localhost:5173
+echo Press Ctrl+C to stop
 echo ----------------------------------------
 npm run dev -- --open
+echo.
+echo [Frontend stopped]
 pause

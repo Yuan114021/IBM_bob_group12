@@ -50,7 +50,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     user = db.query(models.User).filter(models.User.username == form_data.username).first()
     if not user or not utils.verify_password(form_data.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="帳號或密碼錯誤")
-    token = utils.create_access_token({"sub": user.id})
+    token = utils.create_access_token({"sub": str(user.id)})
     return {"access_token": token, "token_type": "bearer", "username": user.username, "user_id": user.id}
 
 

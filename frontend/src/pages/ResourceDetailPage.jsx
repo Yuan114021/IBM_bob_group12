@@ -35,7 +35,7 @@ export default function ResourceDetailPage() {
       </div>
 
       {resource.photo_path ? (
-        <img src={`http://localhost:8000/${resource.photo_path}`} alt={resource.title} style={{ width: '100%', height: 220, objectFit: 'cover' }} />
+        <img src={`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/${resource.photo_path}`} alt={resource.title} style={{ width: '100%', height: 220, objectFit: 'cover' }} />
       ) : (
         <div style={{ width: '100%', height: 160, background: 'var(--primary-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <i className="fa-solid fa-box-open" style={{ fontSize: 48, color: 'var(--primary)', opacity: .4 }}></i>
