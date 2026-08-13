@@ -10,6 +10,8 @@ export default function ResourceDetailPage() {
   const [resource, setResource] = useState(null)
   const [loading, setLoading] = useState(true)
   const [closing, setClosing] = useState(false)
+  const [showContact, setShowContact] = useState(false)
+  const [requested, setRequested] = useState(false)
 
   useEffect(() => {
     api.get(`/resources/${id}`).then(r => setResource(r.data)).finally(() => setLoading(false))
@@ -80,13 +82,97 @@ export default function ResourceDetailPage() {
           </div>
         </div>
 
+        {/* 其他用戶：接收 / 聯絡按鈕 */}
+        {user && user.id !== resource.user_id && resource.is_available && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <button
+              className="btn btn-primary"
+              onClick={() => { setRequested(true); setShowContact(true) }}
+              style={{ opacity: requested ? .7 : 1 }}
+            >
+              <i className="fa-solid fa-hand-holding-heart" style={{ marginRight: 8 }}></i>
+              {requested ? '已送出接收申請' : '我要接收這項物資'}
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={() => setShowContact(true)}
+              style={{ background: 'var(--surface)', color: 'var(--primary)', border: '1.5px solid var(--primary)' }}
+            >
+              <i className="fa-solid fa-comment-dots" style={{ marginRight: 8 }}></i>
+              聯絡發布者
+            </button>
+          </div>
+        )}
+
+        {/* 未登入提示 */}
+        {!user && resource.is_available && (
+          <button className="btn btn-primary" onClick={() => navigate('/login')}>
+            <i className="fa-solid fa-right-to-bracket" style={{ marginRight: 8 }}></i>
+            登入後才能接收物資
+          </button>
+        )}
+
+        {/* 發布者：標記已領完 */}
         {user && user.id === resource.user_id && resource.is_available && (
-          <button className="btn btn-primary" onClick={handleClose} disabled={closing} style={{ opacity: closing ? .5 : 1, background: '#555' }}>
+          <button className="btn btn-primary" onClick={handleClose} disabled={closing} style={{ opacity: closing ? .5 : 1, background: '#6b7280' }}>
             <i className="fa-solid fa-check" style={{ marginRight: 8 }}></i>
             {closing ? '處理中...' : '標記為已領完'}
           </button>
         )}
       </div>
+
+      {/* 聯絡浮窗 */}
+      {showContact && (
+        <div
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,.45)', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', zIndex: 200 }}
+          onClick={() => setShowContact(false)}
+        >
+          <div
+            style={{ background: '#fff', borderRadius: '20px 20px 0 0', padding: '24px 20px 36px', width: '100%', maxWidth: 480 }}
+            onClick={e => e.stopPropagation()}
+          >
+            <div style={{ width: 40, height: 4, background: '#e5e7eb', borderRadius: 99, margin: '0 auto 20px' }}></div>
+            <h3 style={{ fontWeight: 800, fontSize: 17, marginBottom: 6 }}>聯絡發布者</h3>
+            <p style={{ fontSize: 14, color: 'var(--text-sub)', marginBottom: 20, lineHeight: 1.6 }}>
+              你想接收 <strong>「{resource.title}」</strong>，請透過以下方式聯絡發布者
+              <strong style={{ color: 'var(--primary)' }}> {resource.username}</strong>：
+            </p>
+
+            {requested && (
+              <div style={{ background: '#f0fdf4', border: '1px solid #86efac', borderRadius: 10, padding: '10px 14px', marginBottom: 16, fontSize: 14, color: '#166534' }}>
+                <i className="fa-solid fa-circle-check" style={{ marginRight: 6 }}></i>
+                已送出接收申請，對方確認後請保持聯繫。
+              </div>
+            )}
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <button
+                className="btn btn-primary"
+                style={{ background: '#06b6d4' }}
+                onClick={() => { alert(`平台內部訊息功能即將上線！\n目前請透過社區公佈欄或其他方式聯絡 ${resource.username}。`) }}
+              >
+                <i className="fa-solid fa-envelope" style={{ marginRight: 8 }}></i>
+                發送平台訊息（即將上線）
+              </button>
+              <button
+                className="btn btn-primary"
+                style={{ background: '#25d366' }}
+                onClick={() => window.open(`https://line.me/R/msg/text/?我想接收您在好厝邊發布的「${encodeURIComponent(resource.title)}」，請問還有嗎？`)}
+              >
+                <i className="fa-brands fa-line" style={{ marginRight: 8 }}></i>
+                透過 LINE 聯絡
+              </button>
+            </div>
+
+            <button
+              onClick={() => setShowContact(false)}
+              style={{ marginTop: 16, width: '100%', background: 'none', border: 'none', color: 'var(--text-sub)', fontSize: 14, cursor: 'pointer', padding: 8 }}
+            >
+              關閉
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
