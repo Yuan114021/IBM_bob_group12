@@ -7,6 +7,8 @@ export default function HomePage() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const [stats, setStats] = useState({ resources: 0, demands: 0 })
+  const [govItems, setGovItems] = useState([])
+  const [govLoading, setGovLoading] = useState(true)
 
   useEffect(() => {
     Promise.all([
@@ -15,6 +17,11 @@ export default function HomePage() {
     ]).then(([r, d]) => {
       setStats({ resources: r.data.length, demands: d.data.length })
     })
+
+    api.get('/gov-announcements/')
+      .then(res => setGovItems(res.data))
+      .catch(() => setGovItems([]))
+      .finally(() => setGovLoading(false))
   }, [])
 
   return (
@@ -101,6 +108,49 @@ export default function HomePage() {
               <i className="fa-regular fa-calendar" style={{ marginRight: 3 }}></i>{a.date}
             </div>
             <div style={{ fontSize: 14, color: '#555', lineHeight: 1.55 }}>{a.body}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* 政府福利資訊 */}
+      <div className="section-label" style={{ marginTop: 8 }}>
+        <i className="fa-solid fa-landmark"></i>政府福利資訊
+      </div>
+      <div style={{ padding: '0 16px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {govLoading ? (
+          <div style={{ textAlign: 'center', color: 'var(--text-sub)', fontSize: 14, padding: 20 }}>
+            <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: 6 }}></i>載入中...
+          </div>
+        ) : govItems.length === 0 ? (
+          <div style={{ textAlign: 'center', color: 'var(--text-sub)', fontSize: 14, padding: 20 }}>
+            暫無資料
+          </div>
+        ) : govItems.map(w => (
+          <div key={w.id} style={{
+            background: 'var(--surface)',
+            borderRadius: 'var(--r-md)',
+            border: '1px solid var(--border)',
+            padding: '12px 14px',
+            borderLeft: `4px solid ${w.tag_color}`,
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+              <div style={{ fontSize: 15, fontWeight: 700 }}>{w.title}</div>
+              <span style={{
+                fontSize: 11, fontWeight: 700, padding: '2px 8px',
+                borderRadius: 99, background: w.tag_color + '18', color: w.tag_color,
+              }}>{w.tag}</span>
+            </div>
+            {w.published_at && (
+              <div style={{ fontSize: 12, color: 'var(--text-sub)', marginBottom: 4 }}>
+                <i className="fa-regular fa-calendar" style={{ marginRight: 3 }}></i>{w.published_at}
+              </div>
+            )}
+            <div style={{ fontSize: 14, color: '#555', lineHeight: 1.55, marginBottom: 8 }}>{w.body}</div>
+            {w.link && (
+              <a href={w.link} target="_blank" rel="noreferrer" style={{ fontSize: 13, color: w.tag_color, textDecoration: 'none', fontWeight: 600 }}>
+                <i className="fa-solid fa-arrow-up-right-from-square" style={{ marginRight: 4 }}></i>前往申請 / 詳細資訊
+              </a>
+            )}
           </div>
         ))}
       </div>

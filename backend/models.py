@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Text, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Text, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from database import Base
@@ -79,6 +79,20 @@ class Elder(Base):
     note = Column(Text, nullable=True)
     is_matched = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+
+class GovAnnouncement(Base):
+    __tablename__ = "gov_announcements"
+
+    id = Column(Integer, primary_key=True, index=True)
+    source_id = Column(String, unique=True, index=True, nullable=False)  # 來源唯一識別碼，避免重複
+    title = Column(String, nullable=False)
+    body = Column(Text, nullable=True)
+    tag = Column(String, nullable=True)       # 老人福利 / 低收入戶 / 急難救助 / 身心障礙
+    tag_color = Column(String, nullable=True)
+    link = Column(String, nullable=True)
+    published_at = Column(String, nullable=True)
+    fetched_at = Column(DateTime, default=datetime.utcnow)
 
 
 class ServiceRequest(Base):
