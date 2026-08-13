@@ -1,0 +1,196 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>敹極?餉? ??蝷曉??撟喳</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/utils.js"></script>
+  <script>document.addEventListener('DOMContentLoaded', applyGlobalFontSize);</script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <nav class="bg-white border-b border-gray-200 shadow-sm">
+    <div class="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="../index.html" class="text-lg font-bold text-blue-600">??儭?蝷曉??撟喳</a>
+      <a href="matching.html" class="text-sm text-gray-500 hover:text-blue-600">??餈?慦?擐?</a>
+    </div>
+  </nav>
+
+  <main class="max-w-2xl mx-auto px-4 py-10">
+    <div class="flex items-center gap-3 mb-1">
+      <span class="text-3xl">??</span>
+      <h1 class="text-2xl font-bold text-gray-800">敹極???餉?</h1>
+    </div>
+    <p class="text-sm text-gray-500 mb-8 ml-12">隢‵撖急?舀?靘??????畾蛛?銝血??澈隞質?霅?/p>
+
+    <form id="volunteerForm" class="bg-white rounded-2xl border border-gray-200 p-8 space-y-6">
+
+      <!-- 憪? -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">憪? <span class="text-red-500">*</span></label>
+        <input type="text" id="volName" required placeholder="?函?憪?"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+      </div>
+
+      <!-- ?舐窗?餉店 -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">?舐窗?餉店 <span class="text-red-500">*</span></label>
+        <input type="tel" id="volPhone" required placeholder="0912-345-678"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+      </div>
+
+      <!-- ?舀?靘??? -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-3">?舀?靘??? <span class="text-red-500">*</span>嚗銴嚗?/label>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="flex items-center gap-2 bg-gray-50 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-blue-300 transition">
+            <input type="checkbox" name="volService" value="?予?芯撈" class="accent-blue-600" />
+            <span class="text-sm">? ?予?芯撈</span>
+          </label>
+          <label class="flex items-center gap-2 bg-gray-50 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-blue-300 transition">
+            <input type="checkbox" name="volService" value="??郊" class="accent-blue-600" />
+            <span class="text-sm">? ??郊</span>
+          </label>
+          <label class="flex items-center gap-2 bg-gray-50 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-blue-300 transition">
+            <input type="checkbox" name="volService" value="?芸??那" class="accent-blue-600" />
+            <span class="text-sm">? ?芸??那</span>
+          </label>
+          <label class="flex items-center gap-2 bg-gray-50 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-blue-300 transition">
+            <input type="checkbox" name="volService" value="隞?眺?抵?" class="accent-blue-600" />
+            <span class="text-sm">?? 隞?眺?抵?</span>
+          </label>
+          <label class="flex items-center gap-2 bg-gray-50 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-blue-300 transition col-span-2">
+            <input type="checkbox" name="volService" value="摰嗅??" class="accent-blue-600" />
+            <span class="text-sm">?? 摰嗅??</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- ?舫???畾?-->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-3">?舫????挾 <span class="text-red-500">*</span>嚗銴嚗?/label>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="flex items-center gap-2 bg-gray-50 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-blue-300 transition">
+            <input type="checkbox" name="volTime" value="撟單銝?" class="accent-blue-600" />
+            <span class="text-sm">撟單銝?</span>
+          </label>
+          <label class="flex items-center gap-2 bg-gray-50 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-blue-300 transition">
+            <input type="checkbox" name="volTime" value="撟單銝?" class="accent-blue-600" />
+            <span class="text-sm">撟單銝?</span>
+          </label>
+          <label class="flex items-center gap-2 bg-gray-50 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-blue-300 transition">
+            <input type="checkbox" name="volTime" value="撟單??" class="accent-blue-600" />
+            <span class="text-sm">撟單??</span>
+          </label>
+          <label class="flex items-center gap-2 bg-gray-50 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-blue-300 transition">
+            <input type="checkbox" name="volTime" value="?銝?" class="accent-blue-600" />
+            <span class="text-sm">?銝?</span>
+          </label>
+          <label class="flex items-center gap-2 bg-gray-50 rounded-xl border border-gray-200 p-3 cursor-pointer hover:border-blue-300 transition col-span-2">
+            <input type="checkbox" name="volTime" value="?銝?" class="accent-blue-600" />
+            <span class="text-sm">?銝?</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 頨思遢隤??憛?-->
+      <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-5 space-y-4">
+        <p class="text-sm font-semibold text-yellow-700">?? 敹極頨思遢隤?</p>
+        <p class="text-xs text-yellow-600">?箔?????剁?隢??唾澈???瘞?隞亙???霅???靘像?啣祟?訾蝙?具?/p>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            銝頨怠?霅?甇?嚗?span class="text-red-500">*</span>
+          </label>
+          <div id="idDropZone"
+               class="border-2 border-dashed border-yellow-300 rounded-xl p-6 text-center cursor-pointer hover:border-yellow-400 hover:bg-yellow-100 transition"
+               onclick="document.getElementById('idFile').click()">
+            <div class="text-3xl mb-2">??</div>
+            <p class="text-sm text-gray-500">暺??豢?瑼?嚗?撠?獢??唾甇?/p>
+            <p class="text-xs text-gray-400 mt-1">?舀 JPG?NG?DF</p>
+            <p id="idFileName" class="text-xs text-blue-600 mt-2 font-medium"></p>
+          </div>
+          <input type="file" id="idFile" accept=".jpg,.jpeg,.png,.pdf" class="hidden" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">?舀?霅??詨‵嚗?/label>
+          <div class="border-2 border-dashed border-gray-200 rounded-xl p-4 text-center cursor-pointer hover:border-gray-300 transition"
+               onclick="document.getElementById('certFile').click()">
+            <p class="text-sm text-gray-400">暺??豢??舀?霅??詨‵嚗?/p>
+            <p id="certFileName" class="text-xs text-blue-600 mt-1 font-medium"></p>
+          </div>
+          <input type="file" id="certFile" accept=".jpg,.jpeg,.png,.pdf" class="hidden" />
+        </div>
+      </div>
+
+      <button type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl py-3 text-sm transition">
+        ?敹極?餉?
+      </button>
+    </form>
+  </main>
+
+  <!-- ???內 -->
+  <div id="successModal" class="modal-overlay hidden">
+    <div class="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 text-center shadow-xl">
+      <div class="text-5xl mb-4">??</div>
+      <h2 class="text-xl font-bold text-gray-800 mb-2">?餉?摰?嚗?/h2>
+      <p class="text-sm text-gray-500 mb-2">?函?鞈?撌脤嚗澈隞質?霅祟?訾葉??/p>
+      <p class="text-xs text-yellow-600 bg-yellow-50 rounded-lg px-3 py-2 mb-6">??隤???敺?蝟餌絞撠?脰?????/p>
+      <div class="flex gap-3">
+        <a href="match-result.html"
+           class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl py-2 text-sm transition text-center">
+          ?亦???蝯?
+        </a>
+        <button onclick="document.getElementById('successModal').classList.add('hidden')"
+           class="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold rounded-xl py-2 text-sm transition">
+          蝣箄?
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/utils.js"></script>
+  <script>
+    // 憿舐內撌脤瑼??迂
+    document.getElementById('idFile').addEventListener('change', function() {
+      document.getElementById('idFileName').textContent = this.files[0]?.name || '';
+    });
+    document.getElementById('certFile').addEventListener('change', function() {
+      document.getElementById('certFileName').textContent = this.files[0]?.name || '';
+    });
+
+    document.getElementById('volunteerForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name    = document.getElementById('volName').value.trim();
+      const phone   = document.getElementById('volPhone').value.trim();
+      const services = [...document.querySelectorAll('input[name="volService"]:checked')].map(el => el.value);
+      const times    = [...document.querySelectorAll('input[name="volTime"]:checked')].map(el => el.value);
+      const hasId    = document.getElementById('idFile').files.length > 0;
+
+      if (!name)  { alert('隢‵撖怠???); return; }
+      if (!phone) { alert('隢‵撖怨蝯⊿閰?); return; }
+      if (services.length === 0) { alert('隢撠?????????); return; }
+      if (times.length === 0)    { alert('隢撠???????畾?); return; }
+      if (!hasId) { alert('隢??唾澈??隞亙???霅?); return; }
+
+      const record = {
+        id: 'V_' + Date.now(),
+        name, phone, services, times,
+        verified: false,   // Demo嚗芋?祈?霅葉
+        createdAt: new Date().toISOString(),
+      };
+      const list = loadFromStorage('volunteers', []);
+      list.unshift(record);
+      saveToStorage('volunteers', list);
+      e.target.reset();
+      document.getElementById('idFileName').textContent = '';
+      document.getElementById('certFileName').textContent = '';
+      document.getElementById('successModal').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
