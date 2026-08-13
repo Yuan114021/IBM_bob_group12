@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>居民身份驗證 — 社區關懷平台</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/utils.js"></script>
+  <script>document.addEventListener('DOMContentLoaded', applyGlobalFontSize);</script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <nav class="bg-white border-b border-gray-200 shadow-sm">
+    <div class="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="../index.html" class="text-lg font-bold text-blue-600">🏘️ 社區關懷平台</a>
+      <a href="needs.html" class="text-sm text-gray-500 hover:text-blue-600">← 返回需求登記</a>
+    </div>
+  </nav>
+
+  <main class="max-w-2xl mx-auto px-4 py-10">
+    <div class="flex items-center gap-3 mb-1">
+      <span class="text-3xl">🏠</span>
+      <h1 class="text-2xl font-bold text-gray-800">居民身份驗證</h1>
+    </div>
+    <p class="text-sm text-gray-500 mb-8 ml-12">驗證完成後將取得「已認證鄰居」徽章，確保需求由社區內居民提出。</p>
+
+    <!-- 步驟指示 -->
+    <div class="flex items-center gap-2 mb-8">
+      <div id="step1Dot" class="w-8 h-8 rounded-full bg-blue-600 text-white text-sm font-bold flex items-center justify-center">1</div>
+      <div id="step1Label" class="text-sm font-semibold text-blue-600">輸入手機與里別</div>
+      <div class="flex-1 h-px bg-gray-200 mx-2"></div>
+      <div id="step2Dot" class="w-8 h-8 rounded-full bg-gray-200 text-gray-400 text-sm font-bold flex items-center justify-center">2</div>
+      <div id="step2Label" class="text-sm font-semibold text-gray-400">輸入簡訊驗證碼</div>
+    </div>
+
+    <!-- 步驟一：手機 + 里別 -->
+    <div id="stepOne" class="bg-white rounded-2xl border border-gray-200 p-8 space-y-6">
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">手機號碼 <span class="text-red-500">*</span></label>
+        <input type="tel" id="phoneInput" placeholder="09XX-XXX-XXX" maxlength="12"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+        <p class="text-xs text-gray-400 mt-1">系統將傳送 6 位數驗證碼至此號碼。</p>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">所在里別 <span class="text-red-500">*</span></label>
+        <select id="villageSelect"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
+          <option value="">請選擇里別</option>
+          <option>中正里</option>
+          <option>仁愛里</option>
+          <option>信義里</option>
+          <option>和平里</option>
+          <option>大同里</option>
+          <option>中山里</option>
+          <option>松山里</option>
+          <option>文山里</option>
+          <option>其他里</option>
+        </select>
+        <p class="text-xs text-gray-400 mt-1">僅限社區內居民登記需求，確保資源有效運用。</p>
+      </div>
+
+      <button id="sendSmsBtn"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl py-3 text-sm transition">
+        發送簡訊驗證碼
+      </button>
+    </div>
+
+    <!-- 步驟二：輸入驗證碼 -->
+    <div id="stepTwo" class="hidden bg-white rounded-2xl border border-gray-200 p-8 space-y-6">
+
+      <div class="bg-blue-50 rounded-xl p-4 text-sm text-blue-700">
+        📱 驗證碼已發送至 <span id="displayPhone" class="font-bold"></span><br/>
+        <span class="text-xs text-blue-500">（Demo 模式：驗證碼為 <strong id="demoCode" class="text-blue-700 text-base tracking-widest"></strong>）</span>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">輸入 6 位數驗證碼 <span class="text-red-500">*</span></label>
+        <input type="text" id="codeInput" placeholder="______" maxlength="6"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-center text-2xl tracking-[.5em] font-bold focus:outline-none focus:ring-2 focus:ring-blue-300" />
+      </div>
+
+      <div id="codeError" class="hidden text-sm text-red-500 text-center">驗證碼錯誤，請重新輸入。</div>
+
+      <button id="verifyBtn"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl py-3 text-sm transition">
+        確認驗證
+      </button>
+
+      <button id="resendBtn" class="w-full text-sm text-gray-400 hover:text-blue-600 transition">
+        重新發送驗證碼
+      </button>
+    </div>
+
+  </main>
+
+  <!-- 驗證成功 Modal -->
+  <div id="successModal" class="modal-overlay hidden">
+    <div class="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 text-center shadow-xl">
+      <div class="text-5xl mb-4">🎉</div>
+      <h2 class="text-xl font-bold text-gray-800 mb-3">驗證成功！</h2>
+      <p class="text-sm text-gray-500 mb-4">您已取得社區認證，可以開始登記需求。</p>
+      <div class="inline-flex items-center gap-2 badge-neighbor text-base px-4 py-2 mb-6">
+        ✓ 已認證鄰居
+      </div>
+      <br/>
+      <a href="needs.html"
+         class="inline-block mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl py-3 text-sm transition text-center">
+        前往登記需求
+      </a>
+    </div>
+  </div>
+
+  <script>
+    let generatedCode = '';
+    let savedPhone    = '';
+    let savedVillage  = '';
+
+    document.getElementById('sendSmsBtn').addEventListener('click', () => {
+      const phone   = document.getElementById('phoneInput').value.trim();
+      const village = document.getElementById('villageSelect').value;
+      if (!phone)   { alert('請輸入手機號碼'); return; }
+      if (!village) { alert('請選擇里別'); return; }
+
+      // Demo：產生 6 位隨機數字
+      generatedCode = String(Math.floor(100000 + Math.random() * 900000));
+      savedPhone    = phone;
+      savedVillage  = village;
+
+      // 切換到步驟二
+      document.getElementById('stepOne').classList.add('hidden');
+      document.getElementById('stepTwo').classList.remove('hidden');
+      document.getElementById('displayPhone').textContent = phone;
+      document.getElementById('demoCode').textContent     = generatedCode;
+
+      // 更新步驟指示
+      document.getElementById('step1Dot').classList.replace('bg-blue-600','bg-green-500');
+      document.getElementById('step1Label').classList.replace('text-blue-600','text-green-600');
+      document.getElementById('step2Dot').classList.replace('bg-gray-200','bg-blue-600');
+      document.getElementById('step2Dot').classList.replace('text-gray-400','text-white');
+      document.getElementById('step2Label').classList.replace('text-gray-400','text-blue-600');
+    });
+
+    document.getElementById('verifyBtn').addEventListener('click', () => {
+      const input = document.getElementById('codeInput').value.trim();
+      if (input !== generatedCode) {
+        document.getElementById('codeError').classList.remove('hidden');
+        return;
+      }
+      document.getElementById('codeError').classList.add('hidden');
+
+      // 儲存驗證狀態到 localStorage
+      const resident = {
+        phone: savedPhone,
+        village: savedVillage,
+        verifiedAt: new Date().toISOString(),
+        badge: 'neighbor',   // 已認證鄰居
+      };
+      localStorage.setItem('resident_identity', JSON.stringify(resident));
+
+      document.getElementById('successModal').classList.remove('hidden');
+    });
+
+    document.getElementById('resendBtn').addEventListener('click', () => {
+      generatedCode = String(Math.floor(100000 + Math.random() * 900000));
+      document.getElementById('demoCode').textContent  = generatedCode;
+      document.getElementById('codeInput').value       = '';
+      document.getElementById('codeError').classList.add('hidden');
+    });
+  </script>
+</body>
+</html>

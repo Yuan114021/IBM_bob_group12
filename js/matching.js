@@ -75,8 +75,8 @@ if (matched.length === 0) {
               <div class="flex items-center gap-2 flex-wrap">
                 <span class="font-semibold text-gray-700 text-sm">${vol.name}</span>
                 ${vol.verified
-                  ? '<span class="badge-approved text-xs">已認證</span>'
-                  : '<span class="badge-pending text-xs">認證中</span>'}
+                  ? '<span class="badge-volunteer">💜 愛心志工</span>'
+                  : '<span class="badge-pending">認證中</span>'}
               </div>
               <div class="mt-1 flex flex-wrap gap-1">
                 <span class="text-xs text-gray-400">共同服務：</span>
