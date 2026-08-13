@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>管理員審核 — 社區關懷平台</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/utils.js"></script>
+  <script>document.addEventListener('DOMContentLoaded', applyGlobalFontSize);</script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- 導覽列 -->
+  <nav class="bg-white border-b border-gray-200 shadow-sm">
+    <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="../index.html" class="text-lg font-bold text-blue-600">🏘️ 社區關懷平台</a>
+      <span class="text-xs bg-yellow-100 text-yellow-700 border border-yellow-200 rounded-full px-3 py-1 font-semibold">🔑 管理員模式</span>
+    </div>
+  </nav>
+
+  <main class="max-w-3xl mx-auto px-4 py-10">
+
+    <!-- 標題 -->
+    <h1 class="text-2xl font-bold text-gray-800 mb-1">需求審核</h1>
+    <p class="text-sm text-gray-500 mb-8">以下為所有待審核需求，請確認後點選「通過」或「拒絕」。</p>
+
+    <!-- 待審核清單 -->
+    <section class="mb-12">
+      <h2 class="text-base font-semibold text-gray-700 mb-4 flex items-center gap-2">
+        <span class="badge-pending">待審核</span>
+        <span id="pendingCount" class="text-gray-400 text-sm font-normal"></span>
+      </h2>
+      <div id="pendingList" class="space-y-3">
+        <p class="text-sm text-gray-400 text-center py-8">目前沒有待審核的需求。</p>
+      </div>
+    </section>
+
+    <!-- 已審核清單 -->
+    <section class="mb-12">
+      <h2 class="text-base font-semibold text-gray-700 mb-4">審核紀錄</h2>
+      <div id="reviewedList" class="space-y-3">
+        <p class="text-sm text-gray-400 text-center py-4">尚無審核紀錄。</p>
+      </div>
+    </section>
+
+    <!-- 志工審核區 -->
+    <section class="mb-12">
+      <h2 class="text-base font-semibold text-gray-700 mb-1 flex items-center gap-2">
+        🙋 志工身份審核
+        <span id="volPendingCount" class="text-gray-400 text-sm font-normal"></span>
+      </h2>
+      <p class="text-xs text-gray-400 mb-4">審核通過後志工將取得「愛心志工」徽章，並可進行配對。</p>
+      <div id="volPendingList" class="space-y-3 mb-6">
+        <p class="text-sm text-gray-400 text-center py-6">目前沒有待審核的志工。</p>
+      </div>
+      <h3 class="text-sm font-semibold text-gray-500 mb-3">已審核志工</h3>
+      <div id="volReviewedList" class="space-y-3">
+        <p class="text-sm text-gray-400 text-center py-3">尚無審核紀錄。</p>
+      </div>
+    </section>
+
+    <!-- 物資需求公告欄 -->
+    <section class="bg-orange-50 border border-orange-100 rounded-2xl p-6">
+      <h2 class="text-base font-bold text-orange-700 mb-4">📦 物資需求公告欄</h2>
+      <p class="text-xs text-orange-500 mb-4">以下為審核通過的生活物資需求，歡迎社區居民或志工協助提供。</p>
+      <div id="supplyBoard" class="space-y-3">
+        <p class="text-sm text-gray-400 text-center py-4">目前沒有物資需求。</p>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/needs-admin.js"></script>
+</body>
+</html>

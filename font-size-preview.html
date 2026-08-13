@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>選擇合適的字體大小</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      background: #f7f8fa;
+      color: #1f2328;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 16px 40px;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1f2328;
+      margin-bottom: 32px;
+      letter-spacing: -0.3px;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 28px 32px;
+      width: 100%;
+      max-width: 620px;
+      margin-bottom: 20px;
+    }
+
+    /* ── 滑桿區 ── */
+    .control-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .control-row label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #57606a;
+      white-space: nowrap;
+      min-width: 72px;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      -webkit-appearance: none;
+      height: 6px;
+      border-radius: 9999px;
+      background: #e5e7eb;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #3b82d4;
+      box-shadow: 0 1px 6px rgba(59,130,212,.4);
+      cursor: pointer;
+      transition: transform .15s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+    .size-badge {
+      min-width: 56px;
+      text-align: right;
+      font-size: 16px;
+      font-weight: 700;
+      color: #3b82d4;
+    }
+
+    /* ── 快速預設 ── */
+    .presets {
+      display: flex;
+      gap: 8px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .presets span {
+      font-size: 12px;
+      color: #57606a;
+      margin-right: 2px;
+    }
+
+    .preset-btn {
+      border: 1px solid #e5e7eb;
+      background: #f7f8fa;
+      color: #57606a;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all .15s;
+    }
+
+    .preset-btn:hover { background: #e5e7eb; }
+    .preset-btn.active { background: #3b82d4; color: #fff; border-color: #3b82d4; }
+
+    /* ── 預覽方塊 ── */
+    .preview-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #57606a;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 8px;
+      max-width: 620px;
+      width: 100%;
+    }
+
+    .preview-box {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 32px;
+      width: 100%;
+      max-width: 620px;
+      line-height: 1.75;
+      color: #1f2328;
+      transition: font-size .12s ease;
+      min-height: 160px;
+    }
+
+    .preview-box p + p { margin-top: 1em; }
+
+    .confirm-btn {
+      display: block;
+      width: 100%;
+      max-width: 620px;
+      margin-top: 20px;
+      padding: 14px;
+      background: #3b82d4;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: background .15s;
+    }
+
+    .confirm-btn:hover { background: #2563c0; }
+
+    footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      font-size: 12px;
+      color: #57606a;
+      text-align: center;
+      border-top: 1px solid #e5e7eb;
+      width: 100%;
+      max-width: 620px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>選擇合適的字體大小</h1>
+
+  <!-- 控制區 -->
+  <div class="card">
+    <div class="control-row">
+      <label for="sizeRange">字體大小</label>
+      <input type="range" id="sizeRange" min="10" max="48" value="16" step="1" />
+      <span class="size-badge" id="sizeBadge">16 px</span>
+    </div>
+
+    <div class="presets">
+      <span>快速選擇：</span>
+      <button class="preset-btn" data-size="12">12px 小字</button>
+      <button class="preset-btn active" data-size="16">16px 正文</button>
+      <button class="preset-btn" data-size="20">20px 大字</button>
+      <button class="preset-btn" data-size="24">24px 標題</button>
+      <button class="preset-btn" data-size="32">32px 特大</button>
+    </div>
+  </div>
+
+  <!-- 預覽區 -->
+  <div class="preview-label">預覽效果</div>
+  <div class="preview-box" id="previewBox">
+    <p>社區關懷平台致力於連結社區長者與志工，讓每一份需求都能被看見、被幫助。</p>
+    <p>The quick brown fox jumps over the lazy dog. 1234567890</p>
+    <p>您的資料將以匿名代號保護，送出後由志工／里長審核通過後才會公告。</p>
+  </div>
+
+  <button class="confirm-btn" id="confirmBtn">✅ 套用此字體大小並前往首頁</button>
+
+  <footer>社區關懷平台 · IBM Bob Group 12</footer>
+
+  <script>
+    const range      = document.getElementById('sizeRange');
+    const badge      = document.getElementById('sizeBadge');
+    const preview    = document.getElementById('previewBox');
+    const presetBtns = document.querySelectorAll('.preset-btn');
+
+    // 載入上次儲存的設定
+    const saved = localStorage.getItem('global_font_size');
+    if (saved) applySize(saved);
+
+    function applySize(val) {
+      val = parseInt(val);
+      preview.style.fontSize = val + 'px';
+      badge.textContent = val + ' px';
+      range.value = val;
+      presetBtns.forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.dataset.size) === val);
+      });
+    }
+
+    range.addEventListener('input', () => applySize(range.value));
+
+    presetBtns.forEach(btn => {
+      btn.addEventListener('click', () => applySize(btn.dataset.size));
+    });
+
+    // 確認套用：儲存到 localStorage 並跳轉首頁
+    document.getElementById('confirmBtn').addEventListener('click', () => {
+      localStorage.setItem('global_font_size', range.value);
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>

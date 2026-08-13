@@ -13,7 +13,7 @@ export default function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault(); setLoading(true); setError('')
     try {
-      let location = {}
+      let location = { location_lat: 25.0330, location_lng: 121.5654 }
       try {
         const pos = await new Promise((resolve, reject) => navigator.geolocation?.getCurrentPosition(resolve, reject))
         location = { location_lat: pos.coords.latitude, location_lng: pos.coords.longitude }

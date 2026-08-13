@@ -22,7 +22,7 @@ export default function HomePage() {
     <div className="page-content" style={{ background: 'var(--bg)' }}>
       {/* App Header */}
       <div className="app-header">
-        <h2><i className="fa-solid fa-seedling"></i>社區共享平台</h2>
+        <h2><i className="fa-solid fa-house-chimney-heart"></i>好厝邊</h2>
       </div>
 
       {/* Banner */}
