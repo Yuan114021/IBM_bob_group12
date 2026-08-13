@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>好厝邊 — 完整預覽</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  /* 新配色：米白 + 深綠 + 淡黃 */
+  --primary:       #2D6A4F;   /* 深綠 */
+  --primary-dark:  #1B4332;   /* 更深綠，hover 用 */
+  --primary-light: #D8F3DC;   /* 淡綠底，次要背景 */
+  --accent:        #F7C948;   /* 淡黃，強調色 */
+  --accent-light:  #FFF9E0;   /* 淡黃底 */
+  --bg:            #F8F5EE;   /* 米白 */
+  --surface:       #FFFFFF;
+  --border:        #DDD7CC;
+  --text:          #2A2A2A;
+  --text-sub:      #6A6460;
+  --r-md: 12px; --r-lg: 20px;
+  --shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+body {
+  font-family: "Noto Sans TC","Microsoft JhengHei",sans-serif;
+  font-size: 18px; background: #ccc8be; color: var(--text);
+  padding: 24px 16px 40px;
+}
+h1.page-title { text-align:center; font-size:24px; font-weight:800; margin-bottom:6px; color:var(--primary-dark); }
+.page-sub { text-align:center; font-size:15px; color:var(--text-sub); margin-bottom:24px; }
+
+/* ── 頁籤 ── */
+.tab-nav { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:24px; }
+.tab-btn { padding:9px 16px; border-radius:22px; font-size:15px; font-weight:600; border:2px solid var(--border); background:var(--surface); color:var(--text-sub); cursor:pointer; }
+.tab-btn.active { background:var(--primary); border-color:var(--primary); color:#fff; }
+
+/* ── 手機外框 ── */
+.phone-wrap { display:flex; justify-content:center; }
+.phone { width:390px; min-height:780px; background:var(--bg); border-radius:36px; overflow:hidden; box-shadow:0 12px 48px rgba(0,0,0,0.26); display:flex; flex-direction:column; border:3px solid #1a1a1a; }
+.screen { display:none; flex-direction:column; flex:1; }
+.screen.active { display:flex; }
+
+/* ── Header ── */
+.app-header { height:56px; background:var(--surface); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.app-header h2 { font-size:19px; font-weight:700; color:var(--primary-dark); }
+.app-header h2 i { margin-right:8px; color:var(--primary); }
+
+/* ── 捲動區 ── */
+.scroll-area { flex:1; overflow-y:auto; padding-bottom:80px; background:var(--bg); }
+.scroll-area::-webkit-scrollbar { width:4px; }
+.scroll-area::-webkit-scrollbar-thumb { background:#ccc5b8; border-radius:4px; }
+
+/* ── 底部導覽 ── */
+.bottom-nav { position:sticky; bottom:0; height:64px; background:var(--surface); border-top:1px solid var(--border); box-shadow:0 -2px 8px rgba(0,0,0,0.06); display:flex; flex-shrink:0; z-index:50; }
+.nav-item { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; cursor:pointer; color:var(--text-sub); font-size:11px; font-weight:600; padding:6px 0; }
+.nav-item.active { color:var(--primary); }
+.nav-item i { font-size:20px; }
+
+/* ── 共用 ── */
+.section-label { font-size:18px; font-weight:700; padding:16px 16px 10px; color:var(--text); }
+.section-label i { color:var(--primary); margin-right:6px; }
+.tag { display:inline-block; font-size:12px; font-weight:700; padding:3px 9px; border-radius:7px; }
+.tag-yellow { background:var(--accent-light); color:#7a5c00; }
+.tag-green  { background:var(--primary-light); color:#1B4332; }
+.tag-gray   { background:#eee; color:#555; }
+
+.btn { display:block; width:100%; height:52px; border-radius:var(--r-lg); font-size:17px; font-weight:700; border:none; cursor:pointer; text-align:center; line-height:52px; }
+.btn-primary { background:var(--primary); color:#fff; }
+.btn-outline { background:transparent; border:2px solid var(--primary); color:var(--primary); line-height:48px; }
+.btn-sm { display:inline-block; height:38px; padding:0 14px; border-radius:14px; font-size:14px; font-weight:700; border:none; cursor:pointer; line-height:38px; }
+
+.filter-bar { display:flex; gap:8px; padding:10px 16px; overflow-x:auto; background:var(--surface); border-bottom:1px solid var(--border); }
+.filter-bar::-webkit-scrollbar { display:none; }
+.chip { flex-shrink:0; padding:6px 14px; border-radius:18px; font-size:14px; font-weight:600; border:1.5px solid var(--border); background:var(--surface); color:var(--text-sub); white-space:nowrap; cursor:pointer; }
+.chip.active { background:var(--primary); border-color:var(--primary); color:#fff; }
+.chip i { margin-right:4px; }
+
+/* ── 首頁 ── */
+.home-banner { background:var(--primary); margin:14px 16px; border-radius:var(--r-md); padding:20px 18px; color:#fff; }
+.home-banner .greet { font-size:15px; opacity:.85; margin-bottom:4px; }
+.home-banner .title { font-size:22px; font-weight:800; margin-bottom:6px; }
+.home-banner .sub   { font-size:14px; opacity:.8; }
+.home-banner .sub i { color:var(--accent); margin-right:4px; }
+.quick-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:0 16px; }
+.quick-card { background:var(--surface); border-radius:var(--r-md); border:1px solid var(--border); box-shadow:var(--shadow); padding:18px 12px 14px; display:flex; flex-direction:column; align-items:center; gap:10px; cursor:pointer; }
+.quick-card .q-icon { width:48px; height:48px; border-radius:14px; background:var(--primary-light); display:flex; align-items:center; justify-content:center; }
+.quick-card .q-icon i { font-size:22px; color:var(--primary); }
+.quick-card .q-name { font-size:16px; font-weight:700; }
+.quick-card .q-count { font-size:13px; color:var(--text-sub); }
+.announce-list { padding:0 16px; display:flex; flex-direction:column; gap:10px; }
+.ann-card { background:var(--surface); border-radius:var(--r-md); border:1px solid var(--border); padding:12px 14px; border-left:4px solid var(--primary); }
+.ann-card .an-title { font-size:16px; font-weight:700; margin-bottom:4px; }
+.ann-card .an-meta  { font-size:13px; color:var(--text-sub); margin-bottom:5px; }
+.ann-card .an-meta i { margin-right:3px; }
+.ann-card .an-body  { font-size:14px; color:#555; line-height:1.55; }
+
+/* ── 物資 ── */
+.goods-list { padding:12px 16px; display:flex; flex-direction:column; gap:12px; }
+.goods-card { background:var(--surface); border-radius:var(--r-md); border:1px solid var(--border); box-shadow:var(--shadow); overflow:hidden; }
+.goods-card .gc-top { padding:14px 14px 10px; }
+.goods-card .gc-name { font-size:17px; font-weight:700; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; }
+.goods-card .gc-meta { font-size:14px; color:var(--text-sub); line-height:1.9; }
+.goods-card .gc-meta i { color:var(--primary); margin-right:4px; width:14px; }
+.goods-card .gc-actions { border-top:1px solid var(--border); display:flex; }
+.goods-card .gc-btn { flex:1; height:44px; font-size:15px; font-weight:700; border:none; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; }
+.goods-card .gc-btn:first-child { color:var(--primary); border-right:1px solid var(--border); }
+.goods-card .gc-btn:last-child  { color:#888; }
+
+/* ── 志願 ── */
+.vol-list { padding:12px 16px; display:flex; flex-direction:column; gap:12px; }
+.vol-card { background:var(--surface); border-radius:var(--r-md); border:1px solid var(--border); box-shadow:var(--shadow); padding:14px; }
+.vol-card .vc-head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
+.vol-card .vc-name { font-size:17px; font-weight:700; }
+.vol-card .vc-meta { font-size:13px; color:var(--text-sub); line-height:1.9; margin-bottom:10px; }
+.vol-card .vc-meta i { color:var(--primary); margin-right:4px; width:13px; }
+.vol-card .vc-footer { display:flex; gap:8px; align-items:center; }
+.vol-card .vc-quota { font-size:13px; color:var(--text-sub); flex:1; }
+.vol-card .vc-quota span { font-weight:700; color:var(--primary); }
+
+/* ── 需求 ── */
+.req-form { padding:4px 16px 16px; display:flex; flex-direction:column; gap:14px; }
+.form-group { display:flex; flex-direction:column; gap:6px; }
+.form-label { font-size:16px; font-weight:700; }
+.form-input,.form-select,.form-textarea { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-md); font-size:16px; font-family:inherit; color:var(--text); padding:12px 14px; width:100%; outline:none; }
+.form-input:focus,.form-select:focus,.form-textarea:focus { border-color:var(--primary); border-width:2px; }
+.form-textarea { height:80px; resize:none; line-height:1.6; }
+.req-past { padding:0 16px 16px; display:flex; flex-direction:column; gap:10px; }
+.req-card { background:var(--surface); border-radius:var(--r-md); border:1px solid var(--border); padding:12px 14px; display:flex; justify-content:space-between; align-items:center; }
+.req-card .rc-title { font-size:16px; font-weight:700; }
+.req-card .rc-meta  { font-size:13px; color:var(--text-sub); margin-top:3px; }
+.req-card .rc-meta i { margin-right:3px; }
+
+/* ── 地圖 ── */
+.map-box { position:relative; width:100%; height:295px; overflow:hidden; }
+.map-svg  { width:100%; height:100%; }
+.map-pin  { position:absolute; display:flex; flex-direction:column; align-items:center; transform:translate(-50%,-100%); }
+.map-pin .bubble { background:var(--surface); border:2px solid; border-radius:9px; padding:5px 10px; font-size:13px; font-weight:700; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,0.16); position:relative; display:flex; align-items:center; gap:5px; }
+.map-pin .bubble::after { content:''; position:absolute; bottom:-7px; left:50%; transform:translateX(-50%); border:4px solid transparent; }
+.map-pin .dot { width:12px; height:12px; border-radius:50%; border:2px solid #fff; margin-top:2px; box-shadow:0 1px 4px rgba(0,0,0,.2); }
+.map-pin.g .bubble { border-color:var(--primary); }
+.map-pin.g .bubble::after { border-top-color:var(--primary); }
+.map-pin.g .dot { background:var(--primary); }
+.map-pin.g .bubble i { color:var(--primary); }
+.map-pin.v .bubble { border-color:var(--accent); }
+.map-pin.v .bubble::after { border-top-color:var(--accent); }
+.map-pin.v .dot { background:var(--accent); }
+.map-pin.v .bubble i { color:#a07800; }
+.my-loc { position:absolute; width:16px; height:16px; background:#1976D2; border-radius:50%; border:3px solid #fff; box-shadow:0 0 0 5px rgba(25,118,210,.2); transform:translate(-50%,-50%); }
+.map-legend { position:absolute; top:10px; left:10px; background:rgba(255,255,255,.94); border-radius:9px; padding:8px 12px; font-size:13px; line-height:2; box-shadow:var(--shadow); }
+.ldot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:5px; vertical-align:middle; }
+.locate-btn { position:absolute; right:12px; bottom:12px; width:44px; height:44px; background:var(--surface); border-radius:50%; box-shadow:0 2px 8px rgba(0,0,0,.16); display:flex; align-items:center; justify-content:center; font-size:18px; border:1px solid var(--border); cursor:pointer; color:var(--primary); }
+.nearby-list { padding:8px 16px; display:flex; flex-direction:column; gap:10px; }
+.nearby-card { background:var(--surface); border-radius:var(--r-md); border:1px solid var(--border); box-shadow:var(--shadow); padding:12px 14px; display:flex; gap:12px; align-items:center; }
+.ni-icon { width:44px; height:44px; display:flex; align-items:center; justify-content:center; border-radius:10px; flex-shrink:0; }
+.ni-icon i { font-size:20px; }
+.ni-icon.g { background:var(--primary-light); }
+.ni-icon.g i { color:var(--primary); }
+.ni-icon.v { background:var(--accent-light); }
+.ni-icon.v i { color:#a07800; }
+.ni-info { flex:1; }
+.ni-name { font-size:16px; font-weight:700; }
+.ni-meta { font-size:13px; color:var(--text-sub); margin-top:2px; }
+.ni-dist { font-size:14px; font-weight:700; color:var(--primary); flex-shrink:0; }
+
+/* ── 個人 ── */
+.profile-header { background:var(--primary); padding:24px 20px 20px; display:flex; align-items:center; gap:16px; }
+.avatar { width:68px; height:68px; border-radius:50%; background:var(--accent-light); border:3px solid var(--accent); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.avatar i { font-size:30px; color:var(--primary); }
+.pf-name { font-size:21px; font-weight:800; color:#fff; }
+.pf-sub  { font-size:14px; color:rgba(255,255,255,.8); margin-top:4px; display:flex; align-items:center; gap:5px; }
+.pf-sub i { font-size:13px; }
+.stat-row { display:flex; background:var(--surface); border-bottom:1px solid var(--border); }
+.stat-item { flex:1; padding:14px 0; text-align:center; }
+.stat-item:not(:last-child) { border-right:1px solid var(--border); }
+.stat-num { font-size:22px; font-weight:800; color:var(--primary); }
+.stat-lbl { font-size:12px; color:var(--text-sub); margin-top:2px; }
+.profile-tab-bar { display:flex; background:var(--surface); border-bottom:2px solid var(--border); }
+.profile-tb-item { flex:1; text-align:center; padding:12px 0; font-size:15px; font-weight:600; color:var(--text-sub); border-bottom:3px solid transparent; margin-bottom:-2px; cursor:pointer; }
+.profile-tb-item.active { color:var(--primary); border-bottom-color:var(--primary); }
+.history-list { padding:12px 16px; display:flex; flex-direction:column; gap:10px; }
+.history-item { background:var(--surface); border-radius:var(--r-md); border:1px solid var(--border); padding:12px 14px; display:flex; justify-content:space-between; align-items:center; }
+.hi-title { font-size:16px; font-weight:700; }
+.hi-date  { font-size:13px; color:var(--text-sub); margin-top:3px; }
+.hi-date i { margin-right:3px; }
+.settings-list { padding:12px 16px; display:flex; flex-direction:column; }
+.setting-item { background:var(--surface); padding:15px 14px; display:flex; align-items:center; gap:12px; font-size:16px; font-weight:600; border-bottom:1px solid var(--border); cursor:pointer; }
+.setting-item:first-child { border-radius:var(--r-md) var(--r-md) 0 0; }
+.setting-item:last-child  { border-radius:0 0 var(--r-md) var(--r-md); border-bottom:none; }
+.setting-item i.s-icon { font-size:18px; color:var(--primary); width:20px; }
+.setting-item .s-arrow { margin-left:auto; color:var(--border); }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">好厝邊</h1>
+<p class="page-sub">點選頁籤切換預覽各功能頁面</p>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="show('home',this)"><i class="fa-solid fa-house"></i> 首頁</button>
+  <button class="tab-btn" onclick="show('goods',this)"><i class="fa-solid fa-box-open"></i> 物資</button>
+  <button class="tab-btn" onclick="show('volunteer',this)"><i class="fa-solid fa-hands-holding-circle"></i> 服務</button>
+  <button class="tab-btn" onclick="show('request',this)"><i class="fa-solid fa-clipboard-list"></i> 需求</button>
+  <button class="tab-btn" onclick="show('map',this)"><i class="fa-solid fa-map-location-dot"></i> 地圖</button>
+  <button class="tab-btn" onclick="show('profile',this)"><i class="fa-solid fa-user"></i> 我的</button>
+</div>
+
+<div class="phone-wrap"><div class="phone">
+
+  <!-- ══ 首頁 ══ -->
+  <div class="screen active" id="s-home">
+    <div class="app-header"><h2><i class="fa-solid fa-seedling"></i>好厝邊</h2></div>
+    <div class="scroll-area">
+      <div class="home-banner">
+        <div class="greet">早安，陳阿嬤</div>
+        <div class="title">歡迎回來！</div>
+        <div class="sub"><i class="fa-solid fa-circle-info"></i>今日有 3 則新公告、5 筆可領物資</div>
+      </div>
+      <div class="section-label"><i class="fa-solid fa-grip"></i>快速入口</div>
+      <div class="quick-grid">
+        <div class="quick-card" onclick="show('goods',document.querySelectorAll('.tab-btn')[1])">
+          <div class="q-icon"><i class="fa-solid fa-box-open"></i></div>
+          <div class="q-name">物資媒合</div><div class="q-count">5 筆可領取</div>
+        </div>
+        <div class="quick-card" onclick="show('volunteer',document.querySelectorAll('.tab-btn')[2])">
+          <div class="q-icon"><i class="fa-solid fa-hands-holding-circle"></i></div>
+          <div class="q-name">志願服務</div><div class="q-count">4 場報名中</div>
+        </div>
+        <div class="quick-card" onclick="show('request',document.querySelectorAll('.tab-btn')[3])">
+          <div class="q-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+          <div class="q-name">登記需求</div><div class="q-count">我要提出需求</div>
+        </div>
+        <div class="quick-card" onclick="show('map',document.querySelectorAll('.tab-btn')[4])">
+          <div class="q-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+          <div class="q-name">社區地圖</div><div class="q-count">查看附近資源</div>
+        </div>
+      </div>
+      <div class="section-label"><i class="fa-solid fa-bullhorn"></i>最新公告</div>
+      <div class="announce-list">
+        <div class="ann-card">
+          <div class="an-title">本週六發放冬季物資包</div>
+          <div class="an-meta"><i class="fa-regular fa-calendar"></i>2025/07/10 &nbsp;<span class="tag tag-yellow">新</span></div>
+          <div class="an-body">地點：社區活動中心，上午 9 時至 12 時，請攜帶身分證。</div>
+        </div>
+        <div class="ann-card">
+          <div class="an-title">長者送餐服務志願者招募</div>
+          <div class="an-meta"><i class="fa-regular fa-calendar"></i>2025/07/08</div>
+          <div class="an-body">每週三、五上午，協助送餐至獨居長者家中，歡迎報名。</div>
+        </div>
+        <div class="ann-card">
+          <div class="an-title">社區清潔日活動通知</div>
+          <div class="an-meta"><i class="fa-regular fa-calendar"></i>2025/07/05</div>
+          <div class="an-body">7/20 週日早上 8 時，一起美化社區環境，歡迎大小朋友參加。</div>
+        </div>
+      </div>
+    </div>
+    <nav class="bottom-nav">
+      <div class="nav-item active" onclick="show('home',document.querySelectorAll('.tab-btn')[0])"><i class="fa-solid fa-house"></i>首頁</div>
+      <div class="nav-item" onclick="show('goods',document.querySelectorAll('.tab-btn')[1])"><i class="fa-solid fa-box-open"></i>物資</div>
+      <div class="nav-item" onclick="show('map',document.querySelectorAll('.tab-btn')[4])"><i class="fa-solid fa-map-location-dot"></i>地圖</div>
+      <div class="nav-item" onclick="show('volunteer',document.querySelectorAll('.tab-btn')[2])"><i class="fa-solid fa-hands-holding-circle"></i>服務</div>
+      <div class="nav-item" onclick="show('profile',document.querySelectorAll('.tab-btn')[5])"><i class="fa-solid fa-user"></i>我的</div>
+    </nav>
+  </div>
+
+  <!-- ══ 物資媒合 ══ -->
+  <div class="screen" id="s-goods">
+    <div class="app-header"><h2><i class="fa-solid fa-box-open"></i>物資媒合</h2></div>
+    <div class="filter-bar">
+      <div class="chip active">全部</div>
+      <div class="chip"><i class="fa-solid fa-shirt"></i>衣物</div>
+      <div class="chip"><i class="fa-solid fa-bowl-rice"></i>食品</div>
+      <div class="chip"><i class="fa-solid fa-couch"></i>日用品</div>
+      <div class="chip"><i class="fa-solid fa-plug"></i>電器</div>
+    </div>
+    <div class="scroll-area">
+      <div class="goods-list">
+        <div class="goods-card">
+          <div class="gc-top">
+            <div class="gc-name">冬季外套（M 號）<span class="tag tag-green">可領取</span></div>
+            <div class="gc-meta">
+              <div><i class="fa-solid fa-location-dot"></i>中正里活動中心</div>
+              <div><i class="fa-regular fa-calendar"></i>2025/07/10 前　<i class="fa-solid fa-cubes-stacked"></i>數量：2 件</div>
+            </div>
+          </div>
+          <div class="gc-actions">
+            <button class="gc-btn"><i class="fa-solid fa-hand-holding-heart"></i>我要領取</button>
+            <button class="gc-btn"><i class="fa-solid fa-gift"></i>我要捐贈</button>
+          </div>
+        </div>
+        <div class="goods-card">
+          <div class="gc-top">
+            <div class="gc-name">白米（5kg）<span class="tag tag-yellow">新增</span></div>
+            <div class="gc-meta">
+              <div><i class="fa-solid fa-location-dot"></i>仁愛街社區廚房</div>
+              <div><i class="fa-regular fa-calendar"></i>2025/07/15 前　<i class="fa-solid fa-cubes-stacked"></i>數量：6 包</div>
+            </div>
+          </div>
+          <div class="gc-actions">
+            <button class="gc-btn"><i class="fa-solid fa-hand-holding-heart"></i>我要領取</button>
+            <button class="gc-btn"><i class="fa-solid fa-gift"></i>我要捐贈</button>
+          </div>
+        </div>
+        <div class="goods-card">
+          <div class="gc-top">
+            <div class="gc-name">兒童書包<span class="tag tag-green">可領取</span></div>
+            <div class="gc-meta">
+              <div><i class="fa-solid fa-location-dot"></i>和平國小附近</div>
+              <div><i class="fa-regular fa-calendar"></i>2025/07/20 前　<i class="fa-solid fa-cubes-stacked"></i>數量：1 個</div>
+            </div>
+          </div>
+          <div class="gc-actions">
+            <button class="gc-btn"><i class="fa-solid fa-hand-holding-heart"></i>我要領取</button>
+            <button class="gc-btn"><i class="fa-solid fa-gift"></i>我要捐贈</button>
+          </div>
+        </div>
+        <div class="goods-card">
+          <div class="gc-top">
+            <div class="gc-name">電風扇（全新）<span class="tag tag-green">可領取</span></div>
+            <div class="gc-meta">
+              <div><i class="fa-solid fa-location-dot"></i>光明路 18 號</div>
+              <div><i class="fa-regular fa-calendar"></i>2025/07/25 前　<i class="fa-solid fa-cubes-stacked"></i>數量：1 台</div>
+            </div>
+          </div>
+          <div class="gc-actions">
+            <button class="gc-btn"><i class="fa-solid fa-hand-holding-heart"></i>我要領取</button>
+            <button class="gc-btn"><i class="fa-solid fa-gift"></i>我要捐贈</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <nav class="bottom-nav">
+      <div class="nav-item" onclick="show('home',document.querySelectorAll('.tab-btn')[0])"><i class="fa-solid fa-house"></i>首頁</div>
+      <div class="nav-item active" onclick="show('goods',document.querySelectorAll('.tab-btn')[1])"><i class="fa-solid fa-box-open"></i>物資</div>
+      <div class="nav-item" onclick="show('map',document.querySelectorAll('.tab-btn')[4])"><i class="fa-solid fa-map-location-dot"></i>地圖</div>
+      <div class="nav-item" onclick="show('volunteer',document.querySelectorAll('.tab-btn')[2])"><i class="fa-solid fa-hands-holding-circle"></i>服務</div>
+      <div class="nav-item" onclick="show('profile',document.querySelectorAll('.tab-btn')[5])"><i class="fa-solid fa-user"></i>我的</div>
+    </nav>
+  </div>
+
+  <!-- ══ 志願服務 ══ -->
+  <div class="screen" id="s-volunteer">
+    <div class="app-header"><h2><i class="fa-solid fa-hands-holding-circle"></i>志願服務</h2></div>
+    <div class="filter-bar">
+      <div class="chip active">全部</div>
+      <div class="chip"><i class="fa-solid fa-utensils"></i>送餐</div>
+      <div class="chip"><i class="fa-solid fa-person-walking"></i>陪伴</div>
+      <div class="chip"><i class="fa-solid fa-cart-shopping"></i>代購</div>
+      <div class="chip"><i class="fa-solid fa-car"></i>交通</div>
+    </div>
+    <div class="scroll-area">
+      <div class="vol-list">
+        <div class="vol-card">
+          <div class="vc-head"><div class="vc-name">長者送餐服務</div><span class="tag tag-green">報名中</span></div>
+          <div class="vc-meta">
+            <div><i class="fa-solid fa-location-dot"></i>仁愛街社區廚房集合</div>
+            <div><i class="fa-regular fa-calendar"></i>每週三、五　<i class="fa-regular fa-clock"></i>上午 11:00–13:00</div>
+            <div><i class="fa-solid fa-user"></i>發起人：李志工</div>
+          </div>
+          <div class="vc-footer"><div class="vc-quota">剩餘名額：<span>3</span> 名</div><button class="btn-sm btn-primary">報名</button></div>
+        </div>
+        <div class="vol-card">
+          <div class="vc-head"><div class="vc-name">陪伴散步（公園）</div><span class="tag tag-green">報名中</span></div>
+          <div class="vc-meta">
+            <div><i class="fa-solid fa-location-dot"></i>中正公園正門集合</div>
+            <div><i class="fa-regular fa-calendar"></i>每週末　<i class="fa-regular fa-clock"></i>早上 8:00–10:00</div>
+            <div><i class="fa-solid fa-user"></i>發起人：王志工</div>
+          </div>
+          <div class="vc-footer"><div class="vc-quota">剩餘名額：<span>5</span> 名</div><button class="btn-sm btn-primary">報名</button></div>
+        </div>
+        <div class="vol-card">
+          <div class="vc-head"><div class="vc-name">超市代購服務</div><span class="tag tag-yellow">即將截止</span></div>
+          <div class="vc-meta">
+            <div><i class="fa-solid fa-location-dot"></i>全聯福利中心（光明路）</div>
+            <div><i class="fa-regular fa-calendar"></i>本週六　<i class="fa-regular fa-clock"></i>下午 14:00–16:00</div>
+            <div><i class="fa-solid fa-user"></i>發起人：陳志工</div>
+          </div>
+          <div class="vc-footer"><div class="vc-quota">剩餘名額：<span>1</span> 名</div><button class="btn-sm btn-primary">報名</button></div>
+        </div>
+        <div class="vol-card">
+          <div class="vc-head"><div class="vc-name">就醫交通接送</div><span class="tag tag-yellow">新增</span></div>
+          <div class="vc-meta">
+            <div><i class="fa-solid fa-location-dot"></i>依需求地點安排</div>
+            <div><i class="fa-regular fa-calendar"></i>週一至週五　<i class="fa-regular fa-clock"></i>彈性配合</div>
+            <div><i class="fa-solid fa-user"></i>發起人：張志工</div>
+          </div>
+          <div class="vc-footer"><div class="vc-quota">剩餘名額：<span>2</span> 名</div><button class="btn-sm btn-primary">報名</button></div>
+        </div>
+      </div>
+      <div style="padding:0 16px 8px;"><button class="btn btn-outline"><i class="fa-solid fa-plus"></i> 發布志願服務</button></div>
+    </div>
+    <nav class="bottom-nav">
+      <div class="nav-item" onclick="show('home',document.querySelectorAll('.tab-btn')[0])"><i class="fa-solid fa-house"></i>首頁</div>
+      <div class="nav-item" onclick="show('goods',document.querySelectorAll('.tab-btn')[1])"><i class="fa-solid fa-box-open"></i>物資</div>
+      <div class="nav-item" onclick="show('map',document.querySelectorAll('.tab-btn')[4])"><i class="fa-solid fa-map-location-dot"></i>地圖</div>
+      <div class="nav-item active" onclick="show('volunteer',document.querySelectorAll('.tab-btn')[2])"><i class="fa-solid fa-hands-holding-circle"></i>服務</div>
+      <div class="nav-item" onclick="show('profile',document.querySelectorAll('.tab-btn')[5])"><i class="fa-solid fa-user"></i>我的</div>
+    </nav>
+  </div>
+
+  <!-- ══ 需求登記 ══ -->
+  <div class="screen" id="s-request">
+    <div class="app-header"><h2><i class="fa-solid fa-clipboard-list"></i>需求登記</h2></div>
+    <div class="scroll-area">
+      <div class="section-label"><i class="fa-solid fa-pen-to-square"></i>提出您的需求</div>
+      <div class="req-form">
+        <div class="form-group">
+          <label class="form-label">需求類型</label>
+          <select class="form-select">
+            <option>請選擇...</option>
+            <option>物資需求（衣物、食品等）</option>
+            <option>志願服務（陪伴、送餐等）</option>
+            <option>交通協助</option>
+            <option>其他</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">詳細說明</label>
+          <textarea class="form-textarea" placeholder="請描述您的需求，例如：需要 M 號冬衣 2 件…"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">聯絡電話</label>
+          <input class="form-input" type="tel" placeholder="例：0912-345-678">
+        </div>
+        <div class="form-group">
+          <label class="form-label">所在地址</label>
+          <input class="form-input" type="text" placeholder="例：中正里仁愛街 12 號">
+        </div>
+        <button class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> 送出需求</button>
+      </div>
+      <div class="section-label"><i class="fa-solid fa-clock-rotate-left"></i>我的需求紀錄</div>
+      <div class="req-past">
+        <div class="req-card">
+          <div><div class="rc-title">需要輪椅一台</div><div class="rc-meta"><i class="fa-regular fa-calendar"></i>2025/07/08</div></div>
+          <span class="tag tag-yellow">媒合中</span>
+        </div>
+        <div class="req-card">
+          <div><div class="rc-title">每週一次送餐服務</div><div class="rc-meta"><i class="fa-regular fa-calendar"></i>2025/06/25</div></div>
+          <span class="tag tag-green">已完成</span>
+        </div>
+        <div class="req-card">
+          <div><div class="rc-title">冬季禦寒衣物 L 號</div><div class="rc-meta"><i class="fa-regular fa-calendar"></i>2025/06/10</div></div>
+          <span class="tag tag-green">已完成</span>
+        </div>
+      </div>
+    </div>
+    <nav class="bottom-nav">
+      <div class="nav-item" onclick="show('home',document.querySelectorAll('.tab-btn')[0])"><i class="fa-solid fa-house"></i>首頁</div>
+      <div class="nav-item" onclick="show('goods',document.querySelectorAll('.tab-btn')[1])"><i class="fa-solid fa-box-open"></i>物資</div>
+      <div class="nav-item" onclick="show('map',document.querySelectorAll('.tab-btn')[4])"><i class="fa-solid fa-map-location-dot"></i>地圖</div>
+      <div class="nav-item" onclick="show('volunteer',document.querySelectorAll('.tab-btn')[2])"><i class="fa-solid fa-hands-holding-circle"></i>服務</div>
+      <div class="nav-item" onclick="show('profile',document.querySelectorAll('.tab-btn')[5])"><i class="fa-solid fa-user"></i>我的</div>
+    </nav>
+  </div>
+
+  <!-- ══ 社區地圖 ══ -->
+  <div class="screen" id="s-map">
+    <div class="app-header"><h2><i class="fa-solid fa-map-location-dot"></i>社區地圖</h2></div>
+    <div class="filter-bar">
+      <div class="chip active">全部</div>
+      <div class="chip"><i class="fa-solid fa-box-open"></i>物資點</div>
+      <div class="chip"><i class="fa-solid fa-hands-holding-circle"></i>服務點</div>
+      <div class="chip"><i class="fa-solid fa-clipboard-list"></i>需求點</div>
+    </div>
+    <div class="scroll-area">
+      <div class="map-box">
+        <svg class="map-svg" viewBox="0 0 390 295" xmlns="http://www.w3.org/2000/svg">
+          <rect width="390" height="295" fill="#E8F0E4"/>
+          <rect x="0" y="128" width="390" height="18" fill="#CFC9BE" opacity=".9"/>
+          <rect x="0" y="218" width="390" height="14" fill="#CFC9BE" opacity=".7"/>
+          <rect x="170" y="0" width="16" height="295" fill="#CFC9BE" opacity=".9"/>
+          <rect x="295" y="0" width="13" height="295" fill="#CFC9BE" opacity=".7"/>
+          <rect x="55" y="0" width="11" height="295" fill="#CFC9BE" opacity=".6"/>
+          <rect x="215" y="16" width="68" height="54" rx="7" fill="#A8D5A2" opacity=".9"/>
+          <text x="249" y="48" text-anchor="middle" font-size="11" fill="#2D6A4F" font-weight="700">公園</text>
+          <rect x="76" y="16" width="38" height="32" rx="4" fill="#C4BDB3" opacity=".6"/>
+          <rect x="122" y="16" width="34" height="32" rx="4" fill="#C4BDB3" opacity=".6"/>
+          <rect x="76" y="154" width="46" height="42" rx="4" fill="#C4BDB3" opacity=".6"/>
+          <rect x="214" y="153" width="40" height="36" rx="4" fill="#C4BDB3" opacity=".6"/>
+          <rect x="310" y="153" width="46" height="44" rx="4" fill="#C4BDB3" opacity=".6"/>
+          <rect x="18" y="153" width="28" height="44" rx="4" fill="#C4BDB3" opacity=".5"/>
+          <rect x="18" y="236" width="34" height="36" rx="4" fill="#C4BDB3" opacity=".5"/>
+          <rect x="134" y="236" width="26" height="32" rx="4" fill="#C4BDB3" opacity=".5"/>
+          <rect x="215" y="232" width="56" height="44" rx="4" fill="#C4BDB3" opacity=".55"/>
+          <rect x="310" y="234" width="46" height="38" rx="4" fill="#C4BDB3" opacity=".5"/>
+          <text x="188" y="122" text-anchor="middle" font-size="11" fill="#7a7060" font-weight="500">中正路</text>
+          <text x="167" y="182" font-size="10" fill="#7a7060" font-weight="500" transform="rotate(-90,167,182)">仁愛街</text>
+        </svg>
+        <div class="map-pin g" style="left:108px;top:112px;"><div class="bubble"><i class="fa-solid fa-box-open"></i>舊衣物資</div><div class="dot"></div></div>
+        <div class="map-pin g" style="left:325px;top:94px;"><div class="bubble"><i class="fa-solid fa-box-open"></i>食物銀行</div><div class="dot"></div></div>
+        <div class="map-pin v" style="left:244px;top:202px;"><div class="bubble"><i class="fa-solid fa-utensils"></i>送餐服務</div><div class="dot"></div></div>
+        <div class="map-pin v" style="left:76px;top:228px;"><div class="bubble"><i class="fa-solid fa-person-walking"></i>陪伴散步</div><div class="dot"></div></div>
+        <div class="my-loc" style="left:188px;top:144px;"></div>
+        <div class="map-legend">
+          <div><span class="ldot" style="background:var(--primary);"></span>物資點</div>
+          <div><span class="ldot" style="background:var(--accent);"></span>服務點</div>
+          <div><span class="ldot" style="background:#1976D2;"></span>我的位置</div>
+        </div>
+        <div class="locate-btn"><i class="fa-solid fa-location-crosshairs"></i></div>
+      </div>
+      <div class="section-label"><i class="fa-solid fa-list-ul"></i>附近資源（4 筆）</div>
+      <div class="nearby-list">
+        <div class="nearby-card"><div class="ni-icon g"><i class="fa-solid fa-box-open"></i></div><div class="ni-info"><div class="ni-name">舊衣物資點</div><div class="ni-meta"><i class="fa-solid fa-location-dot"></i> 中正路 12 號 &nbsp;<span class="tag tag-green">可領取</span></div></div><div class="ni-dist">180m</div></div>
+        <div class="nearby-card"><div class="ni-icon v"><i class="fa-solid fa-utensils"></i></div><div class="ni-info"><div class="ni-name">送餐志願服務</div><div class="ni-meta"><i class="fa-solid fa-location-dot"></i> 仁愛街 45 號 &nbsp;<span class="tag tag-yellow">報名中</span></div></div><div class="ni-dist">320m</div></div>
+        <div class="nearby-card"><div class="ni-icon g"><i class="fa-solid fa-box-open"></i></div><div class="ni-info"><div class="ni-name">食物銀行</div><div class="ni-meta"><i class="fa-solid fa-location-dot"></i> 光明路 8 號 &nbsp;<span class="tag tag-green">可領取</span></div></div><div class="ni-dist">450m</div></div>
+        <div class="nearby-card"><div class="ni-icon v"><i class="fa-solid fa-person-walking"></i></div><div class="ni-info"><div class="ni-name">陪伴散步服務</div><div class="ni-meta"><i class="fa-solid fa-location-dot"></i> 和平街 27 號 &nbsp;<span class="tag tag-yellow">報名中</span></div></div><div class="ni-dist">520m</div></div>
+      </div>
+    </div>
+    <nav class="bottom-nav">
+      <div class="nav-item" onclick="show('home',document.querySelectorAll('.tab-btn')[0])"><i class="fa-solid fa-house"></i>首頁</div>
+      <div class="nav-item" onclick="show('goods',document.querySelectorAll('.tab-btn')[1])"><i class="fa-solid fa-box-open"></i>物資</div>
+      <div class="nav-item active" onclick="show('map',document.querySelectorAll('.tab-btn')[4])"><i class="fa-solid fa-map-location-dot"></i>地圖</div>
+      <div class="nav-item" onclick="show('volunteer',document.querySelectorAll('.tab-btn')[2])"><i class="fa-solid fa-hands-holding-circle"></i>服務</div>
+      <div class="nav-item" onclick="show('profile',document.querySelectorAll('.tab-btn')[5])"><i class="fa-solid fa-user"></i>我的</div>
+    </nav>
+  </div>
+
+  <!-- ══ 個人資料 ══ -->
+  <div class="screen" id="s-profile">
+    <div class="app-header"><h2><i class="fa-solid fa-user"></i>個人資料</h2></div>
+    <div class="scroll-area">
+      <div class="profile-header">
+        <div class="avatar"><i class="fa-solid fa-person"></i></div>
+        <div>
+          <div class="pf-name">陳阿嬤</div>
+          <div class="pf-sub"><i class="fa-solid fa-phone"></i>0912-345-678</div>
+          <div class="pf-sub"><i class="fa-solid fa-location-dot"></i>中正里仁愛街 12 號</div>
+        </div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-item"><div class="stat-num">3</div><div class="stat-lbl">捐贈紀錄</div></div>
+        <div class="stat-item"><div class="stat-num">5</div><div class="stat-lbl">服務報名</div></div>
+        <div class="stat-item"><div class="stat-num">2</div><div class="stat-lbl">需求完成</div></div>
+      </div>
+      <div class="profile-tab-bar">
+        <div class="profile-tb-item active">我的捐贈</div>
+        <div class="profile-tb-item">我的服務</div>
+        <div class="profile-tb-item">我的需求</div>
+      </div>
+      <div class="history-list">
+        <div class="history-item"><div><div class="hi-title">舊衣物 5 件</div><div class="hi-date"><i class="fa-regular fa-calendar"></i>2025/06/18</div></div><span class="tag tag-green">已媒合</span></div>
+        <div class="history-item"><div><div class="hi-title">食用油 2 瓶</div><div class="hi-date"><i class="fa-regular fa-calendar"></i>2025/05/30</div></div><span class="tag tag-green">已媒合</span></div>
+        <div class="history-item"><div><div class="hi-title">兒童書包 1 個</div><div class="hi-date"><i class="fa-regular fa-calendar"></i>2025/05/12</div></div><span class="tag tag-yellow">媒合中</span></div>
+      </div>
+      <div class="section-label"><i class="fa-solid fa-gear"></i>設定</div>
+      <div class="settings-list">
+        <div class="setting-item"><i class="fa-solid fa-user-pen s-icon"></i>編輯個人資料<i class="fa-solid fa-chevron-right s-arrow"></i></div>
+        <div class="setting-item"><i class="fa-solid fa-bell s-icon"></i>通知設定<i class="fa-solid fa-chevron-right s-arrow"></i></div>
+        <div class="setting-item"><i class="fa-solid fa-lock s-icon"></i>隱私設定<i class="fa-solid fa-chevron-right s-arrow"></i></div>
+        <div class="setting-item" style="color:#c0392b;"><i class="fa-solid fa-right-from-bracket s-icon" style="color:#c0392b;"></i>登出<i class="fa-solid fa-chevron-right s-arrow"></i></div>
+      </div>
+    </div>
+    <nav class="bottom-nav">
+      <div class="nav-item" onclick="show('home',document.querySelectorAll('.tab-btn')[0])"><i class="fa-solid fa-house"></i>首頁</div>
+      <div class="nav-item" onclick="show('goods',document.querySelectorAll('.tab-btn')[1])"><i class="fa-solid fa-box-open"></i>物資</div>
+      <div class="nav-item" onclick="show('map',document.querySelectorAll('.tab-btn')[4])"><i class="fa-solid fa-map-location-dot"></i>地圖</div>
+      <div class="nav-item" onclick="show('volunteer',document.querySelectorAll('.tab-btn')[2])"><i class="fa-solid fa-hands-holding-circle"></i>服務</div>
+      <div class="nav-item active" onclick="show('profile',document.querySelectorAll('.tab-btn')[5])"><i class="fa-solid fa-user"></i>我的</div>
+    </nav>
+  </div>
+
+</div></div>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('s-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+</script>
+</body>
+</html>
