@@ -39,13 +39,20 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     )
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: int = payload.get("sub")
+        print(f"[DEBUG] JWT payload: {payload}")
+        user_id = payload.get("sub")
+        print(f"[DEBUG] user_id from token: {user_id}, type: {type(user_id)}")
         if user_id is None:
+            print("[DEBUG] user_id is None → 401")
             raise credentials_exception
-    except JWTError:
+        user_id = int(user_id)
+    except (JWTError, ValueError) as e:
+        print(f"[DEBUG] JWT decode error: {e}")
         raise credentials_exception
     user = db.query(models.User).filter(models.User.id == user_id).first()
+    print(f"[DEBUG] user found: {user}")
     if user is None:
+        print(f"[DEBUG] user_id={user_id} not in DB → 401")
         raise credentials_exception
     return user
 
