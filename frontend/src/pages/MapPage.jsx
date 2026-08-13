@@ -42,9 +42,9 @@ export default function MapPage() {
   }, [userPos])
 
   const nearby = [
-    ...resources.slice(0, 3).map(r => ({ ...r, type: 'resource' })),
-    ...demands.slice(0, 2).map(d => ({ ...d, type: 'demand' })),
-  ].sort((a, b) => (a.distance_km || 99) - (b.distance_km || 99)).slice(0, 5)
+    ...resources.map(r => ({ ...r, type: 'resource' })),
+    ...demands.map(d => ({ ...d, type: 'demand' })),
+  ].sort((a, b) => (a.distance_km || 99) - (b.distance_km || 99))
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg)', paddingBottom: 64 }}>

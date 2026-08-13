@@ -34,7 +34,7 @@ export default function ResourcesPage() {
     }
   }
 
-  useEffect(() => { fetchResources(category, keyword) }, [category, userPos])
+  useEffect(() => { fetchResources(category, keyword) }, [category, keyword, userPos])
 
   const handleSearch = e => { e.preventDefault(); fetchResources(category, keyword) }
 

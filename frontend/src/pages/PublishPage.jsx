@@ -25,9 +25,16 @@ export default function PublishPage() {
   }
 
   const getLocation = () => new Promise((resolve, reject) => {
-    navigator.geolocation?.getCurrentPosition(
+    if (!navigator.geolocation) {
+      reject(new Error('您的瀏覽器不支援定位功能'))
+      return
+    }
+    navigator.geolocation.getCurrentPosition(
       pos => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-      () => reject(new Error('無法取得位置'))
+      (err) => {
+        if (err.code === 1) reject(new Error('請允許瀏覽器取得位置權限，再重新送出'))
+        else reject(new Error('無法取得位置，請確認裝置定位已開啟'))
+      }
     )
   })
 
@@ -50,7 +57,7 @@ export default function PublishPage() {
       if (res.data.matched_demands?.length > 0) setMatchedDemands(res.data.matched_demands)
       else navigate('/resources')
     } catch (err) {
-      setError(err.response?.data?.detail || '發布失敗，請稍後再試')
+      setError(err.response?.data?.detail || err.message || '發布失敗，請稍後再試')
     } finally { setLoading(false) }
   }
 

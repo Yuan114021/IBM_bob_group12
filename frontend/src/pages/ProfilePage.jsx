@@ -12,8 +12,10 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (!user) return
-    api.get('/resources/').then(r => setMyResources(r.data.filter(x => x.user_id === user.id)))
-    api.get('/demands/').then(r => setMyDemands(r.data.filter(x => x.user_id === user.id)))
+    api.get('/resources/', { params: { user_id: user.id } })
+      .then(r => setMyResources(r.data.filter(x => x.user_id === user.id)))
+    api.get('/demands/', { params: { user_id: user.id } })
+      .then(r => setMyDemands(r.data.filter(x => x.user_id === user.id)))
   }, [user])
 
   const handleLogout = () => { logout(); navigate('/') }
